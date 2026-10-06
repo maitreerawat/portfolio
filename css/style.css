@@ -1,0 +1,112 @@
+/* ==========================================================================
+   PORTFOLIO STYLES: COSMIC STORYBOOK & HARDWARE-ACCELERATED ANIMATIONS
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  cursor: none; /* Custom star cursor handles all pointers */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #030508;
+  color: #f1f5f9;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   Hardware Acceleration & GPU Compositing
+   -------------------------------------------------------------------------- */
+.gpu-layer {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* --------------------------------------------------------------------------
+   Star Cursor & Particle Canvas
+   -------------------------------------------------------------------------- */
+#cursor-star {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.05s ease-out;
+  filter: drop-shadow(0 0 12px rgba(253, 224, 71, 0.95));
+}
+
+#stardust-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* --------------------------------------------------------------------------
+   Falling Cursive Typography
+   -------------------------------------------------------------------------- */
+.falling-line {
+  opacity: 0;
+  transform: translate3d(0, -45px, 0);
+  filter: blur(6px);
+  transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.falling-line.in-view {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0px);
+}
+
+/* --------------------------------------------------------------------------
+   Living Tree of Consciousness Glow & Leaf Animations
+   -------------------------------------------------------------------------- */
+@keyframes treeBreathingGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.45)) drop-shadow(0 0 30px rgba(251, 113, 133, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(251, 113, 133, 0.65)) drop-shadow(0 0 50px rgba(52, 211, 153, 0.35));
+  }
+}
+
+.tree-glow {
+  animation: treeBreathingGlow 6s infinite alternate ease-in-out;
+}
+
+@keyframes leafPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.leaf-node {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  transform-origin: center;
+}
+
+.leaf-node:hover {
+  animation: leafPulse 2.2s infinite ease-in-out;
+  filter: brightness(1.35) drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+}
+
+/* --------------------------------------------------------------------------
+   Custom Scrollbar Hidden for Pure Aesthetic Immersion
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  display: none;
+}
+

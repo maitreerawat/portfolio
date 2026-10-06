@@ -1,237 +1,519 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maitree Rawat — Psychology, Empathy & AI for Human Progress</title>
+  <title>Maitree Rawat — From Stardust to Empathy</title>
+  
+  <!-- Google Fonts: Cormorant Garamond, Alex Brush, Plus Jakarta Sans, Space Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- GSAP Animation Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  
+  <!-- Modular Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+            cursive: ['"Alex Brush"', 'cursive'],
             mono: ['"Space Mono"', 'monospace'],
           },
           colors: {
-            canvas: '#0e1117',
-            card: '#161b22',
-            accent: '#38bdf8',
-            coral: '#fb7185',
-            amber: '#fbbf24',
-            mint: '#34d399',
+            cosmic: '#030508',
+            stardust: '#e2e8f0',
+            ethereal: '#94a3b8',
+            synapse: '#38bdf8',
+            bioamber: '#fbbf24',
+            biocoral: '#fb7185',
+            biomint: '#34d399',
           }
         }
       }
     }
   </script>
-  <style>
-    body {
-      background-color: #0b0f19;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(251, 113, 133, 0.12) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(52, 211, 153, 0.06) 0px, transparent 50%);
-    }
-    .floating-pill {
-      animation: float 4s ease-in-out infinite alternate;
-    }
-    @keyframes float {
-      0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-8px) rotate(1.5deg); }
-    }
-    .custom-cursor {
-      pointer-events: none;
-      transition: transform 0.15s ease-out;
-    }
-  </style>
 </head>
-<body class="min-h-screen text-slate-100 font-sans selection:bg-accent selection:text-black flex flex-col justify-between overflow-x-hidden relative">
+<body class="bg-cosmic font-sans selection:bg-biocoral selection:text-black">
 
-  <!-- Floating Ambient Orb (GSAP controlled) -->
-  <div id="orb" class="fixed w-96 h-96 rounded-full bg-gradient-to-tr from-accent/20 to-coral/20 blur-3xl pointer-events-none -z-10 transition-all duration-700 ease-out"></div>
+  <!-- Interactive Star Cursor -->
+  <div id="cursor-star" class="w-8 h-8 flex items-center justify-center">
+    <svg viewBox="0 0 24 24" class="w-6 h-6 text-amber-200 fill-current drop-shadow-[0_0_10px_rgba(253,224,71,0.9)] animate-spin" style="animation-duration: 10s;">
+      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
+    </svg>
+  </div>
+  <!-- Trailing Stardust Canvas -->
+  <canvas id="stardust-canvas"></canvas>
 
-  <!-- Header / Navigation Bar -->
-  <header class="w-full max-w-5xl mx-auto px-6 py-8 flex justify-between items-center">
+  <!-- Sound / Ambient Navigation Floating Pill -->
+  <nav class="fixed top-6 left-6 right-6 z-50 flex justify-between items-center pointer-events-auto">
+    <div class="flex items-center space-x-3 bg-slate-900/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full">
+      <span class="w-2.5 h-2.5 rounded-full bg-biocoral animate-pulse"></span>
+      <span class="font-mono text-xs tracking-widest text-slate-300 uppercase">A Storybook of Stardust & Mind</span>
+    </div>
+
+    <!-- Chapter Breadcrumbs -->
+    <div class="hidden md:flex items-center space-x-2 bg-slate-900/40 backdrop-blur-md border border-white/10 px-5 py-2 rounded-full text-xs font-mono text-slate-400">
+      <button onclick="goToScene(0)" class="nav-step text-amber-300 hover:text-white transition-colors">I. Big Bang</button>
+      <span>→</span>
+      <button onclick="goToScene(1)" class="nav-step hover:text-white transition-colors">II. Synapses</button>
+      <span>→</span>
+      <button onclick="goToScene(2)" class="nav-step hover:text-white transition-colors">III. The Tree</button>
+      <span>→</span>
+      <button onclick="scrollToEarth()" class="nav-step text-biomint hover:text-white transition-colors">IV. Earth & Maitree</button>
+    </div>
+
     <div class="flex items-center space-x-3">
-      <div class="w-3.5 h-3.5 rounded-full bg-coral animate-pulse"></div>
-      <span class="font-mono text-xs uppercase tracking-widest text-slate-400">MAITREE // HUMAN PROGRESS LAB</span>
+      <button id="guide-btn" onclick="autoGlideToggle()" class="px-4 py-2 bg-white/5 hover:bg-white/15 border border-white/15 text-xs font-mono rounded-full text-slate-300 transition-all flex items-center space-x-2 backdrop-blur-md">
+        <span id="guide-icon">✨</span>
+        <span id="guide-text">Auto-Drift: Off</span>
+      </button>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="font-mono text-xs bg-slate-800/80 border border-slate-700/60 px-3 py-1.5 rounded-full text-slate-300">
-        🌱 decoding human patterns with empathy
-      </span>
-    </div>
-  </header>
+  </nav>
 
-  <!-- Hero Content Section -->
-  <main class="w-full max-w-4xl mx-auto px-6 py-12 flex-1 flex flex-col justify-center items-start">
+  <!-- ========================================================================= -->
+  <!-- HORIZONTAL COSMIC STORYBOOK CONTAINER (ACTS I - III)                      -->
+  <!-- ========================================================================= -->
+  <div id="storybook-container" class="relative w-screen h-screen overflow-hidden bg-gradient-to-r from-[#020408] via-[#050914] to-[#070e1c]">
+    
+    <!-- Deep Space Starfield Background Canvas -->
+    <canvas id="deep-stars-canvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-85"></canvas>
 
-    <!-- Purpose Badge -->
-    <div id="hero-badge" class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-800/60 border border-slate-700/60 mb-6 backdrop-blur-sm">
-      <span class="text-xs font-mono text-coral font-semibold">01 // THE MISSION</span>
-      <span class="text-slate-500">•</span>
-      <span class="text-xs text-slate-300 font-medium">Psychology • Radical Empathy • AI for Human Progress</span>
-    </div>
+    <!-- Horizontal World Track (Scrolls Left to Right with Inertia) -->
+    <div id="horizontal-track" class="flex h-full w-[340vw] gpu-layer">
+      
+      <!-- ----------------------------------------------------------------- -->
+      <!-- ACT I: THE BIG BANG & FALLING STARDUST                            -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="w-[100vw] h-full flex flex-col justify-center items-center px-10 relative shrink-0">
+        <div class="absolute w-[500px] h-[500px] rounded-full bg-radial from-amber-500/15 via-rose-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
-    <!-- Main Title -->
-    <h1 id="hero-title" class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6 text-white">
-      Understanding human patterns. <span class="text-transparent bg-clip-text bg-gradient-to-r from-coral via-accent to-mint">Creating empathetic AI to progress humanity.</span>
-    </h1>
-
-    <!-- Subtitle / Bio Intro -->
-    <p id="hero-subtitle" class="text-lg sm:text-xl text-slate-300 max-w-3xl leading-relaxed mb-10 font-normal">
-      I want to learn humans — our behavioral patterns, emotional landscapes, and cognitive truths. 
-      My purpose is to bridge psychology and artificial intelligence with radical empathy, creating solutions that heal, empower, and move our world forward.
-    </p>
-
-    <!-- 3 Core Pillars -->
-    <div id="pillars-grid" class="w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-      <div class="bg-card/50 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 backdrop-blur-sm transition-all duration-300">
-        <div class="text-2xl mb-2">🧠</div>
-        <h3 class="font-bold text-white text-sm mb-1">Human Behavior & Cognition</h3>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Decoding why we feel, react, connect, and struggle — studying behavioral loops to understand what humans truly need.
-        </p>
-      </div>
-
-      <div class="bg-card/50 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 backdrop-blur-sm transition-all duration-300">
-        <div class="text-2xl mb-2">💛</div>
-        <h3 class="font-bold text-white text-sm mb-1">Radical Empathy in Tech</h3>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Centering vulnerability, compassion, and human dignity so technology never alienates or exploits who we are.
-        </p>
-      </div>
-
-      <div class="bg-card/50 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 backdrop-blur-sm transition-all duration-300">
-        <div class="text-2xl mb-2">🌍</div>
-        <h3 class="font-bold text-white text-sm mb-1">AI for Human Progress</h3>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Building thoughtful, intelligent solutions and assistive systems designed to solve real problems and elevate humanity.
-        </p>
-      </div>
-    </div>
-
-    <!-- Interactive "Idea Seed Generator" Toy -->
-    <div id="interactive-card" class="w-full bg-card/70 border border-slate-800 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden group">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center space-x-2">
-            <span>Inquiry Seed // Empathy & Systems</span>
+        <div class="max-w-3xl text-center relative z-10 space-y-6">
+          <div class="font-mono text-xs text-amber-300/80 tracking-[0.3em] uppercase mb-4">
+            ✦ Chapter I // The Awakening of Dust
           </div>
-          <h2 id="idea-title" class="text-xl sm:text-2xl font-bold text-white transition-all duration-300">
-            "How can AI decode subtle emotional patterns to prevent burnout and restore human connection?"
-          </h2>
+
+          <!-- Falling Cursive Verses (Gradient: Lighter to Darker Radiant White, Increasing Size) -->
+          <div class="space-y-4 py-6">
+            <p class="falling-line font-cursive text-2xl sm:text-3xl text-white/40 tracking-wide font-light">
+              "In the beginning, there was only cold, infinite silence..."
+            </p>
+            <p class="falling-line font-cursive text-3xl sm:text-5xl text-white/60 tracking-wider">
+              "Then, an ancient tremor of light shattered the void."
+            </p>
+            <p class="falling-line font-cursive text-4xl sm:text-6xl text-white/85 tracking-wider font-normal">
+              "Billions of years of cosmic dust adrift across nebulae..."
+            </p>
+            <p class="falling-line font-cursive text-5xl sm:text-7xl md:text-8xl text-white font-medium drop-shadow-[0_0_25px_rgba(255,255,255,0.7)]">
+              "...until star dust woke up to wonder."
+            </p>
+          </div>
+
+          <p class="font-serif italic text-lg sm:text-xl text-slate-400 max-w-xl mx-auto leading-relaxed pt-4 font-light">
+            Every atom inside your chest was forged inside an exploding star. 
+            Scroll right, and watch the dust learn how to feel.
+          </p>
+
+          <!-- Interactive prompt / scroll hint -->
+          <div class="pt-8 flex flex-col items-center justify-center space-y-2 opacity-75">
+            <div class="text-xs font-mono text-slate-400 animate-pulse flex items-center space-x-2">
+              <span>Scroll horizontally or touch right</span>
+              <span class="text-base">⟶</span>
+            </div>
+            <button onclick="goToScene(1)" class="px-5 py-2 rounded-full border border-white/20 hover:border-amber-300 text-xs font-mono text-slate-300 hover:text-white transition-all">
+              ✦ Travel to Synapses
+            </button>
+          </div>
         </div>
-        <button id="spark-btn" class="self-start sm:self-auto px-5 py-2.5 bg-gradient-to-r from-coral to-accent hover:opacity-95 text-slate-950 font-bold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center space-x-2 shadow-lg shadow-coral/20">
-          <span>✨ Spark New Inquiry</span>
-        </button>
-      </div>
+      </section>
 
-      <!-- Category Pills -->
-      <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-800/80">
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800/40">
-          💛 Empathy & Human Care
-        </span>
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800/40">
-          🧠 Behavioral Patterns
-        </span>
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800/40">
-          🌍 AI for Human Progress
-        </span>
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-amber-950/60 text-amber-300 border border-amber-800/40">
-          🎨 Creative Cognition & Speculation
-        </span>
-      </div>
+      <!-- ----------------------------------------------------------------- -->
+      <!-- ACT II: STARS INTO SYNAPSES                                       -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="w-[110vw] h-full flex flex-col justify-center items-center px-12 relative shrink-0">
+        <canvas id="synapse-canvas" class="absolute inset-0 w-full h-full pointer-events-auto"></canvas>
+
+        <div class="max-w-2xl text-center relative z-10 pointer-events-none select-none bg-cosmic/50 backdrop-blur-sm p-8 rounded-3xl border border-white/5">
+          <div class="font-mono text-xs text-sky-400 tracking-[0.3em] uppercase mb-4">
+            ✦ Chapter II // The Birth of the Mind
+          </div>
+
+          <div class="space-y-4">
+            <h2 class="font-cursive text-4xl sm:text-6xl text-white drop-shadow-[0_0_20px_rgba(56,189,248,0.6)]">
+              "The stars began to touch each other..."
+            </h2>
+            <p class="font-serif italic text-xl sm:text-2xl text-slate-300 leading-relaxed font-light">
+              Constellations turned into axons. Galaxies folded into eighty-six billion neurons. 
+              The cosmos built a living mirror so it could look upon itself and ask:
+            </p>
+            <p class="font-mono text-sm sm:text-base text-sky-300 tracking-wider">
+              "Who am I? Why do I hurt? And why do I love?"
+            </p>
+          </div>
+
+          <div class="pt-6 pointer-events-auto">
+            <p class="text-xs font-mono text-slate-400 mb-3">Move your star cursor across the canvas to fire neural pulses</p>
+            <button onclick="goToScene(2)" class="px-6 py-2.5 bg-sky-950/70 hover:bg-sky-900 border border-sky-500/40 text-xs font-mono text-sky-200 rounded-full transition-all shadow-lg shadow-sky-500/10">
+              ✦ Approach The Tree of Consciousness ⟶
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------------------- -->
+      <!-- ACT III: THE LIVING TREE OF EMOTIONS & MEMORIES                   -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="w-[130vw] h-full flex flex-row items-center justify-between px-16 relative shrink-0">
+        <div class="absolute w-[600px] h-[600px] rounded-full bg-radial from-rose-500/15 via-emerald-500/10 to-transparent blur-3xl pointer-events-none right-1/4"></div>
+
+        <!-- Left Narrative Panel -->
+        <div class="max-w-md z-10 space-y-5 bg-cosmic/70 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+          <div class="font-mono text-xs text-rose-300 tracking-[0.3em] uppercase">
+            ✦ Chapter III // The Sacred Tree
+          </div>
+          <h2 class="font-cursive text-4xl sm:text-6xl text-white">
+            "On each leaf lies a human memory..."
+          </h2>
+          <p class="font-serif text-lg text-slate-300 leading-relaxed font-light">
+            The neurons intertwine into an organic living canopy. 
+            Touch the glowing leaves to awaken their emotions. 
+            Here sits the entirety of what makes us human.
+          </p>
+
+          <!-- Active Memory Whisper Display -->
+          <div id="memory-display" class="p-5 rounded-2xl bg-white/5 border border-white/15 transition-all duration-500">
+            <div class="text-xs font-mono text-amber-300 uppercase tracking-widest mb-1 flex items-center space-x-2">
+              <span id="memory-tag">🍃 Touch a Leaf to Listen</span>
+            </div>
+            <p id="memory-text" class="font-serif italic text-base text-slate-200">
+              "Hover over or tap any illuminated leaf on the branches to hear its quiet truth..."
+            </p>
+          </div>
+
+          <div class="pt-2">
+            <button onclick="scrollToEarth()" class="w-full px-6 py-3 bg-gradient-to-r from-biocoral via-bioamber to-biomint text-slate-950 font-bold text-xs font-mono rounded-xl shadow-xl shadow-rose-500/20 hover:opacity-95 transition-all transform hover:scale-[1.02]">
+              ✦ Descend into Earth & Meet Maitree ↓
+            </button>
+          </div>
+        </div>
+
+        <!-- The Glowing Living Botanical Tree Canvas / SVG -->
+        <div class="relative w-[750px] h-[750px] flex items-center justify-center z-10">
+          <svg id="tree-svg" viewBox="0 0 800 800" class="w-full h-full tree-glow overflow-visible">
+            <defs>
+              <linearGradient id="trunk-grad" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#1e293b" />
+                <stop offset="50%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#fb7185" />
+              </linearGradient>
+              <filter id="glow-filter" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            <!-- Trunk & Primary Root Nodes -->
+            <path d="M400 780 C400 680, 390 560, 400 480 C410 400, 400 350, 400 300" 
+                  stroke="url(#trunk-grad)" stroke-width="12" stroke-linecap="round" fill="none" class="tree-branch" />
+            
+            <!-- Major Branch Systems -->
+            <path d="M400 480 C360 420, 280 400, 220 360 C160 320, 140 260, 110 200" 
+                  stroke="#38bdf8" stroke-width="8" stroke-linecap="round" fill="none" class="tree-branch opacity-80" />
+            <path d="M400 450 C440 400, 520 380, 580 340 C640 300, 680 240, 710 180" 
+                  stroke="#fb7185" stroke-width="8" stroke-linecap="round" fill="none" class="tree-branch opacity-80" />
+            
+            <!-- Secondary Canopies -->
+            <path d="M400 320 C350 260, 310 190, 260 140" 
+                  stroke="#34d399" stroke-width="6" stroke-linecap="round" fill="none" class="tree-branch opacity-80" />
+            <path d="M400 320 C450 250, 490 180, 540 130" 
+                  stroke="#fbbf24" stroke-width="6" stroke-linecap="round" fill="none" class="tree-branch opacity-80" />
+            <path d="M400 300 C395 200, 405 140, 400 70" 
+                  stroke="#e2e8f0" stroke-width="5" stroke-linecap="round" fill="none" class="tree-branch opacity-85" />
+            
+            <!-- Subtle Twigs -->
+            <path d="M220 360 C210 300, 230 250, 250 200" stroke="#38bdf8" stroke-width="3" fill="none" opacity="0.6"/>
+            <path d="M580 340 C610 280, 590 220, 570 170" stroke="#fb7185" stroke-width="3" fill="none" opacity="0.6"/>
+            <path d="M260 140 C220 120, 180 110, 150 100" stroke="#34d399" stroke-width="3" fill="none" opacity="0.6"/>
+            <path d="M540 130 C590 110, 630 100, 670 90" stroke="#fbbf24" stroke-width="3" fill="none" opacity="0.6"/>
+
+            <!-- ============================================================= -->
+            <!-- INTERACTIVE LEAF NODES WITH DATA ATTRIBUTES                   -->
+            <!-- ============================================================= -->
+            <g class="leaf-node cursor-pointer" data-emotion="Wonder">
+              <circle cx="400" cy="70" r="18" fill="#fef08a" filter="url(#glow-filter)" />
+              <text x="400" y="75" text-anchor="middle" font-size="12" fill="#030508" font-family="'Space Mono'">✦</text>
+              <text x="400" y="42" text-anchor="middle" font-size="12" fill="#fef08a" font-family="'Space Mono'" letter-spacing="1">WONDER</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Empathy">
+              <circle cx="110" cy="200" r="18" fill="#38bdf8" filter="url(#glow-filter)" />
+              <text x="110" y="205" text-anchor="middle" font-size="12" fill="#030508" font-family="'Space Mono'">💛</text>
+              <text x="110" y="170" text-anchor="middle" font-size="12" fill="#38bdf8" font-family="'Space Mono'">EMPATHY</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Grief">
+              <circle cx="710" cy="180" r="18" fill="#fb7185" filter="url(#glow-filter)" />
+              <text x="710" y="185" text-anchor="middle" font-size="12" fill="#030508" font-family="'Space Mono'">💧</text>
+              <text x="710" y="150" text-anchor="middle" font-size="12" fill="#fb7185" font-family="'Space Mono'">GRIEF</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Joy">
+              <circle cx="260" cy="140" r="16" fill="#34d399" filter="url(#glow-filter)" />
+              <text x="260" y="145" text-anchor="middle" font-size="12" fill="#030508" font-family="'Space Mono'">☀️</text>
+              <text x="260" y="112" text-anchor="middle" font-size="12" fill="#34d399" font-family="'Space Mono'">JOY</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Vulnerability">
+              <circle cx="540" cy="130" r="16" fill="#fbbf24" filter="url(#glow-filter)" />
+              <text x="540" y="135" text-anchor="middle" font-size="12" fill="#030508" font-family="'Space Mono'">🌱</text>
+              <text x="540" y="102" text-anchor="middle" font-size="12" fill="#fbbf24" font-family="'Space Mono'">VULNERABILITY</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Longing">
+              <circle cx="150" cy="100" r="14" fill="#a78bfa" filter="url(#glow-filter)" />
+              <text x="150" y="105" text-anchor="middle" font-size="10" fill="#030508" font-family="'Space Mono'">🕊️</text>
+              <text x="150" y="78" text-anchor="middle" font-size="11" fill="#a78bfa" font-family="'Space Mono'">LONGING</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Hope">
+              <circle cx="670" cy="90" r="14" fill="#38bdf8" filter="url(#glow-filter)" />
+              <text x="670" y="95" text-anchor="middle" font-size="10" fill="#030508" font-family="'Space Mono'">🌿</text>
+              <text x="670" y="68" text-anchor="middle" font-size="11" fill="#38bdf8" font-family="'Space Mono'">HOPE</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Connection">
+              <circle cx="250" cy="200" r="14" fill="#f472b6" filter="url(#glow-filter)" />
+              <text x="250" y="205" text-anchor="middle" font-size="10" fill="#030508" font-family="'Space Mono'">🤝</text>
+              <text x="250" y="235" text-anchor="middle" font-size="11" fill="#f472b6" font-family="'Space Mono'">CONNECTION</text>
+            </g>
+
+            <g class="leaf-node cursor-pointer" data-emotion="Courage">
+              <circle cx="570" cy="170" r="14" fill="#facc15" filter="url(#glow-filter)" />
+              <text x="570" y="175" text-anchor="middle" font-size="10" fill="#030508" font-family="'Space Mono'">🔥</text>
+              <text x="570" y="205" text-anchor="middle" font-size="11" fill="#facc15" font-family="'Space Mono'">COURAGE</text>
+            </g>
+          </svg>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- ACT IV: DESCENT INTO EARTH — MAITREE'S PORTFOLIO & LAB                    -->
+  <!-- ========================================================================= -->
+  <main id="earth-section" class="relative w-full bg-gradient-to-b from-[#070e1c] via-[#091122] to-[#04060a] text-slate-100 py-24 px-6 sm:px-12 z-20 border-t border-white/10">
+    
+    <!-- Floating Return to Stars Button -->
+    <div class="fixed bottom-6 right-6 z-40">
+      <button onclick="scrollToStars()" class="px-5 py-2.5 bg-slate-900/80 hover:bg-slate-800 border border-white/20 text-xs font-mono rounded-full text-amber-200 backdrop-blur-md shadow-2xl flex items-center space-x-2 transition-all transform hover:scale-105">
+        <span>✦ Return to the Stars</span>
+      </button>
     </div>
 
-    <!-- Quick Links & Contact -->
-    <div id="hero-actions" class="mt-10 flex flex-wrap gap-4 items-center">
-      <a href="https://github.com/maitreerawat" target="_blank" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-sm transition-all border border-slate-700/80 flex items-center space-x-2">
-        <span>🐙 GitHub Profile</span>
-      </a>
-      <a href="mailto:hello@example.com" class="px-6 py-3 rounded-xl bg-transparent hover:bg-slate-800/50 text-slate-300 font-medium text-sm transition-all border border-slate-800 flex items-center space-x-2">
-        <span>✉️ Get in Touch</span>
-      </a>
-    </div>
+    <div class="max-w-5xl mx-auto space-y-24">
+      
+      <!-- ----------------------------------------------------------------- -->
+      <!-- SECTION: THE OBSERVER'S MANIFESTO                                 -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="space-y-8 pt-8">
+        <div class="inline-flex items-center space-x-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+          <span class="w-2.5 h-2.5 rounded-full bg-bioamber animate-ping"></span>
+          <span class="text-xs font-mono text-bioamber font-semibold uppercase tracking-widest">Act IV // The Human Observer</span>
+          <span class="text-slate-500">•</span>
+          <span class="text-xs text-slate-300">San Francisco / MIT Media Lab Inspiration</span>
+        </div>
 
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.1] text-white">
+          I study the creature that carries this tree.
+        </h1>
+
+        <p class="text-xl sm:text-2xl text-slate-300 max-w-3xl font-serif italic leading-relaxed font-light">
+          "I want to learn humans — our behavioral loops, hidden vulnerabilities, and psychological instincts — so we can build artificial intelligence with radical empathy to help progress humanity."
+        </p>
+
+        <p class="text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed">
+          Hello, I'm <strong class="text-white font-semibold">Maitree Rawat</strong>. 
+          Inspired by my professor <a href="https://patpat.world" target="_blank" class="text-sky-400 underline hover:text-sky-300 transition-colors">Pat Pataranutaporn</a> (MIT Media Lab / Cyborg Psychology), 
+          I explore the intersection of human psychology, creative cognition, and machine intelligence. 
+          This is my living laboratory of ideas, research essays, and assistive solutions.
+        </p>
+      </section>
+
+      <!-- ----------------------------------------------------------------- -->
+      <!-- SECTION: THE THREE PILLARS OF EMOTIONAL & COGNITIVE AI            -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="space-y-6">
+        <div class="font-mono text-xs text-slate-400 uppercase tracking-widest">Core Inquiries</div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-card/40 border border-white/10 rounded-2xl p-7 backdrop-blur-md hover:border-sky-400/50 transition-all duration-300 group">
+            <div class="text-3xl mb-4 group-hover:scale-110 transition-transform">🧠</div>
+            <h3 class="text-lg font-bold text-white mb-2 font-mono">Behavioral Psychology</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Decoding the architecture of human thought, cognitive biases, habit loops, and emotional triggers to understand what people truly need to heal and grow.
+            </p>
+          </div>
+
+          <div class="bg-card/40 border border-white/10 rounded-2xl p-7 backdrop-blur-md hover:border-rose-400/50 transition-all duration-300 group">
+            <div class="text-3xl mb-4 group-hover:scale-110 transition-transform">💛</div>
+            <h3 class="text-lg font-bold text-white mb-2 font-mono">Radical Empathy</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Rejecting cold, transactional machine design. Centering dignity, vulnerability, and tenderness so technological systems protect human self-worth.
+            </p>
+          </div>
+
+          <div class="bg-card/40 border border-white/10 rounded-2xl p-7 backdrop-blur-md hover:border-emerald-400/50 transition-all duration-300 group">
+            <div class="text-3xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
+            <h3 class="text-lg font-bold text-white mb-2 font-mono">AI for Human Flourishing</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Harnessing intelligent agents as prosthetics of the mind — addressing mental health strain, loneliness, and societal fractures to advance our species.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------------------- -->
+      <!-- SECTION: INTERACTIVE INQUIRY SEED GENERATOR                       -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="space-y-6">
+        <div class="font-mono text-xs text-slate-400 uppercase tracking-widest">Interactive Inquiry Generator</div>
+
+        <div class="w-full bg-slate-900/60 border border-white/15 rounded-3xl p-8 sm:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+            <div>
+              <div class="text-xs font-mono text-biocoral uppercase tracking-wider mb-2 flex items-center space-x-2">
+                <span>✦ A Seed to Spark Reflection</span>
+              </div>
+              <h2 id="earth-idea-title" class="text-2xl sm:text-3xl font-serif italic text-white transition-all duration-300">
+                "How can AI decode subtle behavioral rhythms to prevent burnout and restore human connection?"
+              </h2>
+            </div>
+            <button id="spark-inquiry-btn" class="self-start sm:self-auto px-6 py-3 bg-gradient-to-r from-biocoral to-bioamber text-slate-950 font-bold rounded-2xl transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center space-x-2 shadow-lg shadow-rose-500/20 font-mono text-xs shrink-0">
+              <span>✨ Spark New Inquiry</span>
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-4 border-t border-white/10">
+            <span class="text-xs font-mono px-3.5 py-1.5 rounded-xl bg-rose-950/60 text-rose-300 border border-rose-800/40">
+              💛 Empathy & Healing
+            </span>
+            <span class="text-xs font-mono px-3.5 py-1.5 rounded-xl bg-sky-950/60 text-sky-300 border border-sky-800/40">
+              🧠 Behavioral Dynamics
+            </span>
+            <span class="text-xs font-mono px-3.5 py-1.5 rounded-xl bg-emerald-950/60 text-emerald-300 border border-emerald-800/40">
+              🌍 Assistive AI Systems
+            </span>
+            <span class="text-xs font-mono px-3.5 py-1.5 rounded-xl bg-amber-950/60 text-amber-300 border border-amber-800/40">
+              🌿 Cyborg Psychology
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------------------- -->
+      <!-- SECTION: THE LIVING LAB & PROTOTYPES                              -->
+      <!-- ----------------------------------------------------------------- -->
+      <section class="space-y-6">
+        <div class="flex justify-between items-end">
+          <div>
+            <div class="font-mono text-xs text-slate-400 uppercase tracking-widest mb-1">The Artifacts</div>
+            <h2 class="text-3xl font-bold text-white">Active Explorations & Prototypes</h2>
+          </div>
+          <span class="text-xs font-mono text-biomint">● 4 Living Threads</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all duration-300 space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono text-slate-400 mb-2">
+                <span>PROJECT // 01</span>
+                <span class="text-bioamber bg-amber-950/40 px-2 py-0.5 rounded border border-amber-800/40">🧪 Prototype</span>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Affective Neural Mirrors</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Exploring generative feedback loops that mirror human emotional states to facilitate self-reflection, emotional regulation, and neurodiversity support.
+              </p>
+            </div>
+            <div class="text-xs font-mono text-sky-400 pt-2">#Psychology #AffectiveComputing</div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all duration-300 space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono text-slate-400 mb-2">
+                <span>PROJECT // 02</span>
+                <span class="text-biomint bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/40">🌱 Field Study</span>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Burnout Cadence Detection</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Passive, privacy-preserving behavioral modeling to detect cognitive fatigue and emotional exhaustion before clinical burnout occurs.
+              </p>
+            </div>
+            <div class="text-xs font-mono text-emerald-400 pt-2">#HumanBehavior #PreventativeHealth</div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all duration-300 space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono text-slate-400 mb-2">
+                <span>PROJECT // 03</span>
+                <span class="text-rose-400 bg-rose-950/40 px-2 py-0.5 rounded border border-rose-800/40">💭 Speculative</span>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">The Wisdom Mentoring Twin</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Can an individual converse with an AI persona modeled on their future 80-year-old self to find perspective during moments of overwhelming crisis?
+              </p>
+            </div>
+            <div class="text-xs font-mono text-rose-400 pt-2">#CyborgPsychology #Identity</div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all duration-300 space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono text-slate-400 mb-2">
+                <span>PROJECT // 04</span>
+                <span class="text-sky-400 bg-sky-950/40 px-2 py-0.5 rounded border border-sky-800/40">📚 Preprint</span>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Empathy Beyond Optimization</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                An essay examining why loss functions optimizing solely for attention or productivity inevitably degrade human psychological well-being.
+              </p>
+            </div>
+            <div class="text-xs font-mono text-sky-400 pt-2">#AIEthics #HumanFlourishing</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------------------- -->
+      <!-- SECTION: AN OPEN DOOR / CONNECT                                   -->
+      <!-- ----------------------------------------------------------------- -->
+      <footer class="pt-16 pb-12 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8">
+        <div>
+          <div class="text-2xl font-bold text-white mb-1">Maitree Rawat</div>
+          <div class="font-serif italic text-slate-400 text-sm">Where human mind meets creative machines with empathy.</div>
+        </div>
+
+        <div class="flex flex-wrap gap-4 items-center font-mono text-xs">
+          <a href="https://github.com/maitreerawat" target="_blank" class="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white transition-all flex items-center space-x-2">
+            <span>🐙 GitHub Profile</span>
+          </a>
+          <a href="mailto:hello@example.com" class="px-5 py-2.5 bg-biocoral text-slate-950 font-bold rounded-xl hover:opacity-90 transition-all flex items-center space-x-2">
+            <span>✉️ Begin a Dialogue</span>
+          </a>
+        </div>
+      </footer>
+
+    </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="w-full max-w-5xl mx-auto px-6 py-8 border-t border-slate-800/60 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 font-mono gap-4">
-    <div>Designed with deep empathy • Built for GitHub Pages</div>
-    <div class="flex space-x-6">
-      <span class="hover:text-slate-300 transition-colors">© 2026 MAITREE</span>
-    </div>
-  </footer>
-
-  <!-- GSAP Animations & Interactions -->
-  <script>
-    // List of creative thought seeds to shuffle playfully
-    const ideas = [
-      "How can AI decode subtle emotional patterns to prevent burnout and restore human connection?",
-      "Can intelligent agents be crafted with genuine empathy to support mental well-being in underserved communities?",
-      "What if AI tools helped us recognize our own cognitive biases and listen to others with greater compassion?",
-      "How do we design algorithms that protect human vulnerability rather than exploiting behavioral triggers?",
-      "Using behavioral psychology and machine learning to build compassionate tools for collective healing.",
-      "Can AI adapt dynamically to individual neurodiversity, reducing anxiety in overwhelming environments?",
-      "Designing digital companions that empower self-reflection, emotional regulation, and wisdom mentoring.",
-      "How can we measure the impact of AI on human self-worth, agency, and the social fabric?"
-    ];
-
-    let currentIdeaIdx = 0;
-    const ideaTitle = document.getElementById('idea-title');
-    const sparkBtn = document.getElementById('spark-btn');
-    const orb = document.getElementById('orb');
-
-    // Button click: Spark animation + new idea
-    sparkBtn.addEventListener('click', () => {
-      gsap.to(ideaTitle, {
-        opacity: 0,
-        y: -10,
-        duration: 0.2,
-        onComplete: () => {
-          currentIdeaIdx = (currentIdeaIdx + 1) % ideas.length;
-          ideaTitle.innerText = `"${ideas[currentIdeaIdx]}"`;
-          gsap.to(ideaTitle, {
-            opacity: 1,
-            y: 0,
-            duration: 0.3,
-            ease: "back.out(1.7)"
-          });
-        }
-      });
-
-      // Bouncy button animation
-      gsap.fromTo(sparkBtn, { scale: 0.92 }, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.4)" });
-    });
-
-    // Mouse follow for ambient orb
-    window.addEventListener('mousemove', (e) => {
-      gsap.to(orb, {
-        x: e.clientX - 192,
-        y: e.clientY - 192,
-        duration: 1.2,
-        ease: "power2.out"
-      });
-    });
-
-    // Initial entrance animations
-    window.addEventListener('DOMContentLoaded', () => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from("#hero-badge", { opacity: 0, y: 20, duration: 0.6 })
-        .from("#hero-title", { opacity: 0, y: 30, duration: 0.8 }, "-=0.4")
-        .from("#hero-subtitle", { opacity: 0, y: 20, duration: 0.6 }, "-=0.5")
-        .from("#pillars-grid", { opacity: 0, y: 20, duration: 0.6 }, "-=0.4")
-        .from("#interactive-card", { opacity: 0, scale: 0.95, duration: 0.7, ease: "back.out(1.4)" }, "-=0.3")
-        .from("#hero-actions", { opacity: 0, y: 15, duration: 0.5 }, "-=0.3");
-    });
-  </script>
+  <!-- Modular Main Application Script -->
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
