@@ -1,6 +1,6 @@
-# Creative Ideas & Research Portfolio
+# Psychology, Empathy & AI for Human Progress — Personal Portfolio
 
-A playful, interactive personal website exploring the intersection of **Psychology, Creative Cognition, and AI**, designed for **GitHub Pages**.
+A playful, interactive personal website exploring the intersection of **Psychology, Empathy, and Artificial Intelligence**, designed for **GitHub Pages**.
 
 ---
 
@@ -34,5 +34,5 @@ git push -u origin main
    - **Branch**: Select `main` and `/ (root)`.
    - Click **Save**.
 4. In about 30 seconds, your site is live at:
-   👉 `https://<your-username>.github.io/<your-repo-name>/`
+   👉 `https://maitreerawat.github.io/portfolio/`
 
