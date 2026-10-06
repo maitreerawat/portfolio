@@ -55,3 +55,16 @@
    * Playful mood/theme switcher.
 3. **Research & Writing:**
    * Academic papers, preprints, and speculative thought essays on human-AI synergy.
+
+---
+
+## 5. Agent Operating Rules & Git Workflow
+* **Creative Concepts & Themes (Always Ask First):** All creations, high-level themes, narrative directions, sections, and conceptual decisions must be proposed and agreed upon with Maitree first.
+* **Coding Implementation Details (Autonomous "YOLO Mode"):** Once a creative direction or section is decided, the agent handles all coding, syntax, architecture, styling, and animations autonomously without asking about implementation details.
+* **Git Automation:** The agent automatically creates a clean commit and pushes to `origin main` after completing every change requested by Maitree.
+* **Standard Git Workflow:**
+  1. `git status -s` & `git diff` review.
+  2. Targeted staging (`git add <files>`).
+  3. Conventional commit message (`feat: ...`, `fix: ...`, `chore: ...`).
+  4. Push to remote (`git push origin main`) via authenticated GitHub CLI credentials.
+
