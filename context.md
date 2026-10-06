@@ -9,13 +9,14 @@
 
 ---
 
-## 1. Vision & Inspiration
-* **Theme:** Where human mind meets creative machines — exploring the intersection of **Psychology, Creative Cognition, and Artificial Intelligence**.
-* **Inspiration:** Inspired by Maitree's professor, **Pat Pataranutaporn** ([patpat.world](https://patpat.world), MIT Media Lab / Cyborg Psychology).
-* **Core Philosophy:**
-  * Not a generic/dark "sci-fi AI" cliché.
-  * A fun, playful, vibrant "digital playground" and living archive of all ideas, experiments, and prototypes.
-  * A place to catalog "all the ideas I ever have".
+## 1. Vision & Core Mission
+* **The Calling:** To deeply understand human beings — our patterns, behaviors, emotions, and cognitive nuances — and harness artificial intelligence with empathy to create solutions that heal, empower, and progress humanity.
+* **Core Pillars:**
+  * **Empathy & Humanity First:** Technology is meaningless without compassion. Every system must protect human dignity, emotional well-being, and genuine human connection.
+  * **Behavioral Psychology & Patterns:** Decoding how humans think, feel, relate, and make decisions in an increasingly complex world.
+  * **Empathetic & Purposeful AI:** Building human-centered AI systems not for novelty or replacement, but to augment human capability and solve real societal challenges.
+  * **A Living Ideas Laboratory:** A vibrant, curious, and playful archive of prototypes, research essays, and speculative experiments.
+* **Inspiration:** Inspired by Maitree's professor, **Pat Pataranutaporn** ([patpat.world](https://patpat.world), MIT Media Lab / Cyborg Psychology) and the broader quest for human-AI symbiosis rooted in empathy.
 
 ---
 

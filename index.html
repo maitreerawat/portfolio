@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maitree — Creative Ideas & Research Lab</title>
+  <title>Maitree Rawat — Psychology, Empathy & AI for Human Progress</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -36,8 +36,8 @@
       background-color: #0b0f19;
       background-image: 
         radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(251, 113, 133, 0.1) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(52, 211, 153, 0.05) 0px, transparent 50%);
+        radial-gradient(at 100% 100%, rgba(251, 113, 133, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(52, 211, 153, 0.06) 0px, transparent 50%);
     }
     .floating-pill {
       animation: float 4s ease-in-out infinite alternate;
@@ -60,12 +60,12 @@
   <!-- Header / Navigation Bar -->
   <header class="w-full max-w-5xl mx-auto px-6 py-8 flex justify-between items-center">
     <div class="flex items-center space-x-3">
-      <div class="w-3.5 h-3.5 rounded-full bg-mint animate-pulse"></div>
-      <span class="font-mono text-xs uppercase tracking-widest text-slate-400">MAITREE // IDEA LAB</span>
+      <div class="w-3.5 h-3.5 rounded-full bg-coral animate-pulse"></div>
+      <span class="font-mono text-xs uppercase tracking-widest text-slate-400">MAITREE // HUMAN PROGRESS LAB</span>
     </div>
     <div class="flex items-center space-x-4">
       <span class="font-mono text-xs bg-slate-800/80 border border-slate-700/60 px-3 py-1.5 rounded-full text-slate-300">
-        🌱 status: planting seeds
+        🌱 decoding human patterns with empathy
       </span>
     </div>
   </header>
@@ -73,51 +73,80 @@
   <!-- Hero Content Section -->
   <main class="w-full max-w-4xl mx-auto px-6 py-12 flex-1 flex flex-col justify-center items-start">
 
-    <!-- Playful Badge -->
-    <div id="hero-badge" class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/60 border border-slate-700/60 mb-6 backdrop-blur-sm">
-      <span class="text-xs font-mono text-accent">01 // HELLO WORLD</span>
+    <!-- Purpose Badge -->
+    <div id="hero-badge" class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-800/60 border border-slate-700/60 mb-6 backdrop-blur-sm">
+      <span class="text-xs font-mono text-coral font-semibold">01 // THE MISSION</span>
       <span class="text-slate-500">•</span>
-      <span class="text-xs text-slate-300">Psychology, AI & Creative Playground</span>
+      <span class="text-xs text-slate-300 font-medium">Psychology • Radical Empathy • AI for Human Progress</span>
     </div>
 
     <!-- Main Title -->
     <h1 id="hero-title" class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6 text-white">
-      Where human mind meets <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent via-mint to-amber">creative machines.</span>
+      Understanding human patterns. <span class="text-transparent bg-clip-text bg-gradient-to-r from-coral via-accent to-mint">Creating empathetic AI to progress humanity.</span>
     </h1>
 
     <!-- Subtitle / Bio Intro -->
-    <p id="hero-subtitle" class="text-lg sm:text-xl text-slate-400 max-w-2xl leading-relaxed mb-10 font-normal">
-      I explore the intersection of human psychology, creative technology, and artificial intelligence. 
-      This is a living archive for every idea, prototype, and speculative wonder I ever have.
+    <p id="hero-subtitle" class="text-lg sm:text-xl text-slate-300 max-w-3xl leading-relaxed mb-10 font-normal">
+      I want to learn humans — our behavioral patterns, emotional landscapes, and cognitive truths. 
+      My purpose is to bridge psychology and artificial intelligence with radical empathy, creating solutions that heal, empower, and move our world forward.
     </p>
+
+    <!-- 3 Core Pillars -->
+    <div id="pillars-grid" class="w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+      <div class="bg-card/50 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 backdrop-blur-sm transition-all duration-300">
+        <div class="text-2xl mb-2">🧠</div>
+        <h3 class="font-bold text-white text-sm mb-1">Human Behavior & Cognition</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Decoding why we feel, react, connect, and struggle — studying behavioral loops to understand what humans truly need.
+        </p>
+      </div>
+
+      <div class="bg-card/50 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 backdrop-blur-sm transition-all duration-300">
+        <div class="text-2xl mb-2">💛</div>
+        <h3 class="font-bold text-white text-sm mb-1">Radical Empathy in Tech</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Centering vulnerability, compassion, and human dignity so technology never alienates or exploits who we are.
+        </p>
+      </div>
+
+      <div class="bg-card/50 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 backdrop-blur-sm transition-all duration-300">
+        <div class="text-2xl mb-2">🌍</div>
+        <h3 class="font-bold text-white text-sm mb-1">AI for Human Progress</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Building thoughtful, intelligent solutions and assistive systems designed to solve real problems and elevate humanity.
+        </p>
+      </div>
+    </div>
 
     <!-- Interactive "Idea Seed Generator" Toy -->
     <div id="interactive-card" class="w-full bg-card/70 border border-slate-800 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden group">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Interactive Idea Seed</div>
+          <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center space-x-2">
+            <span>Inquiry Seed // Empathy & Systems</span>
+          </div>
           <h2 id="idea-title" class="text-xl sm:text-2xl font-bold text-white transition-all duration-300">
-            "What if AI could augment human intuition instead of replacing logic?"
+            "How can AI decode subtle emotional patterns to prevent burnout and restore human connection?"
           </h2>
         </div>
-        <button id="spark-btn" class="self-start sm:self-auto px-5 py-2.5 bg-accent hover:bg-sky-300 text-slate-950 font-bold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center space-x-2 shadow-lg shadow-accent/20">
-          <span>✨ Spark New Idea</span>
+        <button id="spark-btn" class="self-start sm:self-auto px-5 py-2.5 bg-gradient-to-r from-coral to-accent hover:opacity-95 text-slate-950 font-bold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center space-x-2 shadow-lg shadow-coral/20">
+          <span>✨ Spark New Inquiry</span>
         </button>
       </div>
 
       <!-- Category Pills -->
       <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-800/80">
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-sky-950/60 text-sky-400 border border-sky-800/40">
-          🧠 Psychology + AI
+        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800/40">
+          💛 Empathy & Human Care
         </span>
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-rose-950/60 text-rose-400 border border-rose-800/40">
-          🎨 Creative Cognition
+        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800/40">
+          🧠 Behavioral Patterns
         </span>
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">
-          🛠️ Physical CAD & Hardware
+        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800/40">
+          🌍 AI for Human Progress
         </span>
-        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-amber-950/60 text-amber-400 border border-amber-800/40">
-          🪐 Speculative Futures
+        <span class="text-xs font-mono px-3 py-1 rounded-lg bg-amber-950/60 text-amber-300 border border-amber-800/40">
+          🎨 Creative Cognition & Speculation
         </span>
       </div>
     </div>
@@ -136,7 +165,7 @@
 
   <!-- Footer -->
   <footer class="w-full max-w-5xl mx-auto px-6 py-8 border-t border-slate-800/60 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 font-mono gap-4">
-    <div>Designed with curiosity • Built for GitHub Pages</div>
+    <div>Designed with deep empathy • Built for GitHub Pages</div>
     <div class="flex space-x-6">
       <span class="hover:text-slate-300 transition-colors">© 2026 MAITREE</span>
     </div>
@@ -146,13 +175,14 @@
   <script>
     // List of creative thought seeds to shuffle playfully
     const ideas = [
-      "What if AI could augment human intuition instead of replacing logic?",
-      "Can interactive digital objects evoke synthetic nostalgia?",
-      "Designing responsive physical hardware that adapts to human heart-rate and mood.",
-      "How does collaborating with generative models reshape human self-esteem?",
-      "Can we build an AI digital twin of our future 80-year-old self for wisdom mentoring?",
-      "Physical CAD objects that change geometry based on psychological states.",
-      "A collective dream archive where machine intelligence maps subconscious patterns."
+      "How can AI decode subtle emotional patterns to prevent burnout and restore human connection?",
+      "Can intelligent agents be crafted with genuine empathy to support mental well-being in underserved communities?",
+      "What if AI tools helped us recognize our own cognitive biases and listen to others with greater compassion?",
+      "How do we design algorithms that protect human vulnerability rather than exploiting behavioral triggers?",
+      "Using behavioral psychology and machine learning to build compassionate tools for collective healing.",
+      "Can AI adapt dynamically to individual neurodiversity, reducing anxiety in overwhelming environments?",
+      "Designing digital companions that empower self-reflection, emotional regulation, and wisdom mentoring.",
+      "How can we measure the impact of AI on human self-worth, agency, and the social fabric?"
     ];
 
     let currentIdeaIdx = 0;
@@ -198,6 +228,7 @@
       tl.from("#hero-badge", { opacity: 0, y: 20, duration: 0.6 })
         .from("#hero-title", { opacity: 0, y: 30, duration: 0.8 }, "-=0.4")
         .from("#hero-subtitle", { opacity: 0, y: 20, duration: 0.6 }, "-=0.5")
+        .from("#pillars-grid", { opacity: 0, y: 20, duration: 0.6 }, "-=0.4")
         .from("#interactive-card", { opacity: 0, scale: 0.95, duration: 0.7, ease: "back.out(1.4)" }, "-=0.3")
         .from("#hero-actions", { opacity: 0, y: 15, duration: 0.5 }, "-=0.3");
     });
