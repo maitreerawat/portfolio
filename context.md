@@ -34,12 +34,16 @@
 ---
 
 ## 3. Current Implementation Status
-* **`index.html`**:
-  * Manifesto headline: *"Where human mind meets creative machines"*.
-  * Interactive GSAP mouse-following ambient aura.
-  * Interactive "Idea Seed Generator" with spring physics button cycling through thought experiments.
-  * Category tags: *Psychology + AI*, *Creative Cognition*, *Physical Prototyping*, *Speculative Futures*.
-  * Direct links to GitHub profile (`github.com/maitreerawat`) and email.
+* **Cosmic Storybook Journey (Acts I - III):**
+  * **Chapter I (Stardust Void):** Minimalist deep space starfield; unquoted falling cursive verses where the first line is always visible on arrival; sequential emergence of subsequent verses; 2s pause upon completion; top-to-down dissolution.
+  * **Catmull-Rom Spline Fairy Dust Flight:** Autonomous 11-point Catmull-Rom curve with full 360° overhead rope loop knot; continuous path-interpolated fairy dust ribbon trail; 120 FPS native rAF synchronization; camera glide into Chapter II.
+  * **Chapter II (Synapses):** Interactive bioluminescent neural network firing action potentials on cursor hover.
+  * **Chapter III (Tree of Consciousness):** Living botanical SVG tree with 9 interactive emotional leaves (*Wonder, Empathy, Grief, Joy, Vulnerability, Longing, Hope, Connection, Courage*).
+  * **Cursor Engine:** Minimalist glowing white firefly dot blinking slowly (`3.2s` breathing pulse) trailed by fine white fairy dust sparkles.
+* **Act IV (Earth & Living Lab):**
+  * Human Observer Manifesto and core pillars (*Behavioral Psychology, Radical Empathy, AI for Human Progress*).
+  * Interactive Idea Seed Generator cycling through speculative human-AI inquiries.
+  * Direct contact and GitHub links.
 * **`README.md`**: Guide for publishing to GitHub and turning on GitHub Pages.
 
 ---

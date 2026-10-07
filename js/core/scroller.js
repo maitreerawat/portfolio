@@ -8,38 +8,62 @@ let targetX = 0;
 let isAnimating = false;
 let autoDriftActive = false;
 let autoDriftRaf = null;
+let trackElement = null;
+
+function getMaxScroll() {
+  return -(window.innerWidth * 2.4); // 340vw total horizontal space
+}
+
+let currentLerp = 0.09;
+let currentSceneIndex = 0;
+
+// Smooth LERP camera loop
+function updateCamera() {
+  if (!trackElement) {
+    trackElement = document.getElementById('horizontal-track');
+  }
+  if (!trackElement) return;
+
+  const maxScroll = getMaxScroll();
+  targetX = Math.max(Math.min(targetX, 0), maxScroll);
+  
+  // LERP smoothing with cinematic easing
+  currentX += (targetX - currentX) * currentLerp;
+  trackElement.style.transform = `translate3d(${currentX}px, 0, 0)`;
+
+  // Trigger Scene 0 poem whenever first screen is reached by scrolling
+  if (Math.abs(currentX) < window.innerWidth * 0.15) {
+    if (currentSceneIndex !== 0) {
+      currentSceneIndex = 0;
+      if (window.playStardustPoem) {
+        window.playStardustPoem();
+      }
+    }
+  } else if (currentX <= -window.innerWidth * 0.35) {
+    currentSceneIndex = 1;
+  }
+
+  if (Math.abs(targetX - currentX) > 0.2 || autoDriftActive) {
+    requestAnimationFrame(updateCamera);
+  } else {
+    currentX = targetX;
+    trackElement.style.transform = `translate3d(${currentX}px, 0, 0)`;
+    currentLerp = 0.09; // Reset to standard inertia
+    isAnimating = false;
+  }
+}
+
+export function requestCameraUpdate() {
+  if (!isAnimating) {
+    isAnimating = true;
+    requestAnimationFrame(updateCamera);
+  }
+}
 
 export function initScroller() {
-  const track = document.getElementById('horizontal-track');
+  trackElement = document.getElementById('horizontal-track');
   const container = document.getElementById('storybook-container');
-  if (!track || !container) return;
-
-  function getMaxScroll() {
-    return -(window.innerWidth * 2.4); // 340vw total horizontal space
-  }
-
-  // Smooth LERP camera loop
-  function updateCamera() {
-    const maxScroll = getMaxScroll();
-    targetX = Math.max(Math.min(targetX, 0), maxScroll);
-    
-    // LERP smoothing: 0.12 gives that heavy, luxurious physical inertia
-    currentX += (targetX - currentX) * 0.12;
-    track.style.transform = `translate3d(${currentX}px, 0, 0)`;
-
-    if (Math.abs(targetX - currentX) > 0.1 || autoDriftActive) {
-      requestAnimationFrame(updateCamera);
-    } else {
-      isAnimating = false;
-    }
-  }
-
-  function requestCameraUpdate() {
-    if (!isAnimating) {
-      isAnimating = true;
-      requestAnimationFrame(updateCamera);
-    }
-  }
+  if (!trackElement || !container) return;
 
   // Mouse wheel & trackpad listener
   window.addEventListener('wheel', (e) => {
@@ -98,11 +122,8 @@ export function initScroller() {
 
 export function goToScene(index) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  const track = document.getElementById('horizontal-track');
-  if (!track) return;
-
   const offsets = [0, -window.innerWidth * 1.0, -window.innerWidth * 2.1];
-  targetX = offsets[index] || 0;
+  targetX = offsets[index] !== undefined ? offsets[index] : 0;
   
   // Highlight active breadcrumb
   const steps = document.querySelectorAll('.nav-step');
@@ -114,9 +135,19 @@ export function goToScene(index) {
     }
   });
 
-  // Trigger camera update
-  currentX += (targetX - currentX) * 0.2;
-  track.style.transform = `translate3d(${targetX}px, 0, 0)`;
+  // Trigger smooth slow cinematic camera update
+  currentLerp = 0.048;
+  requestCameraUpdate();
+
+  // If navigating back to Scene 0, play verse cascade
+  if (index === 0) {
+    currentSceneIndex = 0;
+    if (window.playStardustPoem) {
+      window.playStardustPoem();
+    }
+  } else {
+    currentSceneIndex = index;
+  }
 }
 
 export function scrollToEarth() {

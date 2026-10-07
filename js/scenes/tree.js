@@ -72,7 +72,7 @@ export function initTreeScene() {
         onComplete: () => {
           memoryTag.innerText = memory.tag;
           memoryTag.style.color = memory.color;
-          memoryText.innerText = `"${memory.text}"`;
+          memoryText.innerText = memory.text;
           gsap.to(memoryDisplay, {
             opacity: 1,
             scale: 1,
@@ -84,7 +84,7 @@ export function initTreeScene() {
     } else {
       memoryTag.innerText = memory.tag;
       memoryTag.style.color = memory.color;
-      memoryText.innerText = `"${memory.text}"`;
+      memoryText.innerText = memory.text;
     }
   };
 

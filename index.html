@@ -44,45 +44,25 @@
 </head>
 <body class="bg-cosmic font-sans selection:bg-biocoral selection:text-black">
 
-  <!-- Interactive Star Cursor -->
-  <div id="cursor-star" class="w-8 h-8 flex items-center justify-center">
-    <svg viewBox="0 0 24 24" class="w-6 h-6 text-amber-200 fill-current drop-shadow-[0_0_10px_rgba(253,224,71,0.9)] animate-spin" style="animation-duration: 10s;">
-      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
-    </svg>
+  <!-- Interactive Cursor: Soft Slowly Blinking White Dot -->
+  <div id="cursor-star" class="w-4 h-4 flex items-center justify-center pointer-events-none">
+    <div class="blinking-dot w-2 h-2 rounded-full bg-white"></div>
   </div>
   <!-- Trailing Stardust Canvas -->
   <canvas id="stardust-canvas"></canvas>
 
-  <!-- Sound / Ambient Navigation Floating Pill -->
-  <nav class="fixed top-6 left-6 right-6 z-50 flex justify-between items-center pointer-events-auto">
-    <div class="flex items-center space-x-3 bg-slate-900/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full">
-      <span class="w-2.5 h-2.5 rounded-full bg-biocoral animate-pulse"></span>
-      <span class="font-mono text-xs tracking-widest text-slate-300 uppercase">A Storybook of Stardust & Mind</span>
-    </div>
-
-    <!-- Chapter Breadcrumbs -->
-    <div class="hidden md:flex items-center space-x-2 bg-slate-900/40 backdrop-blur-md border border-white/10 px-5 py-2 rounded-full text-xs font-mono text-slate-400">
-      <button onclick="goToScene(0)" class="nav-step text-amber-300 hover:text-white transition-colors">I. Big Bang</button>
-      <span>→</span>
-      <button onclick="goToScene(1)" class="nav-step hover:text-white transition-colors">II. Synapses</button>
-      <span>→</span>
-      <button onclick="goToScene(2)" class="nav-step hover:text-white transition-colors">III. The Tree</button>
-      <span>→</span>
-      <button onclick="scrollToEarth()" class="nav-step text-biomint hover:text-white transition-colors">IV. Earth & Maitree</button>
-    </div>
-
-    <div class="flex items-center space-x-3">
-      <button id="guide-btn" onclick="autoGlideToggle()" class="px-4 py-2 bg-white/5 hover:bg-white/15 border border-white/15 text-xs font-mono rounded-full text-slate-300 transition-all flex items-center space-x-2 backdrop-blur-md">
-        <span id="guide-icon">✨</span>
-        <span id="guide-text">Auto-Drift: Off</span>
-      </button>
-    </div>
-  </nav>
+  <!-- Ambient Controls (Top Right) -->
+  <div class="fixed top-6 right-6 z-50 flex items-center space-x-3 pointer-events-auto">
+    <button id="guide-btn" onclick="autoGlideToggle()" class="px-4 py-2 bg-white/5 hover:bg-white/15 border border-white/15 text-xs font-mono rounded-full text-slate-300 transition-all flex items-center space-x-2 backdrop-blur-md">
+      <span id="guide-icon">✨</span>
+      <span id="guide-text">Auto-Drift: Off</span>
+    </button>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- HORIZONTAL COSMIC STORYBOOK CONTAINER (ACTS I - III)                      -->
   <!-- ========================================================================= -->
-  <div id="storybook-container" class="relative w-screen h-screen overflow-hidden bg-gradient-to-r from-[#020408] via-[#050914] to-[#070e1c]">
+  <div id="storybook-container" class="relative w-screen h-screen overflow-hidden bg-gradient-to-r from-[#030714] via-[#08152e] to-[#0c1f44]">
     
     <!-- Deep Space Starfield Background Canvas -->
     <canvas id="deep-stars-canvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-85"></canvas>
@@ -94,43 +74,23 @@
       <!-- ACT I: THE BIG BANG & FALLING STARDUST                            -->
       <!-- ----------------------------------------------------------------- -->
       <section class="w-[100vw] h-full flex flex-col justify-center items-center px-10 relative shrink-0">
-        <div class="absolute w-[500px] h-[500px] rounded-full bg-radial from-amber-500/15 via-rose-500/5 to-transparent blur-3xl pointer-events-none"></div>
+        <div class="absolute w-[600px] h-[600px] rounded-full bg-radial from-blue-600/15 via-indigo-600/10 to-transparent blur-3xl pointer-events-none"></div>
 
         <div class="max-w-3xl text-center relative z-10 space-y-6">
-          <div class="font-mono text-xs text-amber-300/80 tracking-[0.3em] uppercase mb-4">
-            ✦ Chapter I // The Awakening of Dust
-          </div>
-
           <!-- Falling Cursive Verses (Gradient: Lighter to Darker Radiant White, Increasing Size) -->
           <div class="space-y-4 py-6">
             <p class="falling-line font-cursive text-2xl sm:text-3xl text-white/40 tracking-wide font-light">
-              "In the beginning, there was only cold, infinite silence..."
+              In the beginning, there was only cold, infinite silence...
             </p>
             <p class="falling-line font-cursive text-3xl sm:text-5xl text-white/60 tracking-wider">
-              "Then, an ancient tremor of light shattered the void."
+              Then, an ancient tremor of light shattered the void.
             </p>
             <p class="falling-line font-cursive text-4xl sm:text-6xl text-white/85 tracking-wider font-normal">
-              "Billions of years of cosmic dust adrift across nebulae..."
+              Billions of years of cosmic dust adrift across nebulae...
             </p>
             <p class="falling-line font-cursive text-5xl sm:text-7xl md:text-8xl text-white font-medium drop-shadow-[0_0_25px_rgba(255,255,255,0.7)]">
-              "...until star dust woke up to wonder."
+              ...until star dust woke up to wonder.
             </p>
-          </div>
-
-          <p class="font-serif italic text-lg sm:text-xl text-slate-400 max-w-xl mx-auto leading-relaxed pt-4 font-light">
-            Every atom inside your chest was forged inside an exploding star. 
-            Scroll right, and watch the dust learn how to feel.
-          </p>
-
-          <!-- Interactive prompt / scroll hint -->
-          <div class="pt-8 flex flex-col items-center justify-center space-y-2 opacity-75">
-            <div class="text-xs font-mono text-slate-400 animate-pulse flex items-center space-x-2">
-              <span>Scroll horizontally or touch right</span>
-              <span class="text-base">⟶</span>
-            </div>
-            <button onclick="goToScene(1)" class="px-5 py-2 rounded-full border border-white/20 hover:border-amber-300 text-xs font-mono text-slate-300 hover:text-white transition-all">
-              ✦ Travel to Synapses
-            </button>
           </div>
         </div>
       </section>
@@ -142,20 +102,16 @@
         <canvas id="synapse-canvas" class="absolute inset-0 w-full h-full pointer-events-auto"></canvas>
 
         <div class="max-w-2xl text-center relative z-10 pointer-events-none select-none bg-cosmic/50 backdrop-blur-sm p-8 rounded-3xl border border-white/5">
-          <div class="font-mono text-xs text-sky-400 tracking-[0.3em] uppercase mb-4">
-            ✦ Chapter II // The Birth of the Mind
-          </div>
-
           <div class="space-y-4">
-            <h2 class="font-cursive text-4xl sm:text-6xl text-white drop-shadow-[0_0_20px_rgba(56,189,248,0.6)]">
-              "The stars began to touch each other..."
-            </h2>
+            <p class="font-cursive text-4xl sm:text-6xl text-white drop-shadow-[0_0_20px_rgba(56,189,248,0.6)]">
+              The stars began to touch each other...
+            </p>
             <p class="font-serif italic text-xl sm:text-2xl text-slate-300 leading-relaxed font-light">
               Constellations turned into axons. Galaxies folded into eighty-six billion neurons. 
               The cosmos built a living mirror so it could look upon itself and ask:
             </p>
             <p class="font-mono text-sm sm:text-base text-sky-300 tracking-wider">
-              "Who am I? Why do I hurt? And why do I love?"
+              Who am I? Why do I hurt? And why do I love?
             </p>
           </div>
 
@@ -176,12 +132,9 @@
 
         <!-- Left Narrative Panel -->
         <div class="max-w-md z-10 space-y-5 bg-cosmic/70 backdrop-blur-md p-8 rounded-3xl border border-white/10">
-          <div class="font-mono text-xs text-rose-300 tracking-[0.3em] uppercase">
-            ✦ Chapter III // The Sacred Tree
-          </div>
-          <h2 class="font-cursive text-4xl sm:text-6xl text-white">
-            "On each leaf lies a human memory..."
-          </h2>
+          <p class="font-cursive text-4xl sm:text-6xl text-white">
+            On each leaf lies a human memory...
+          </p>
           <p class="font-serif text-lg text-slate-300 leading-relaxed font-light">
             The neurons intertwine into an organic living canopy. 
             Touch the glowing leaves to awaken their emotions. 
@@ -194,7 +147,7 @@
               <span id="memory-tag">🍃 Touch a Leaf to Listen</span>
             </div>
             <p id="memory-text" class="font-serif italic text-base text-slate-200">
-              "Hover over or tap any illuminated leaf on the branches to hear its quiet truth..."
+              Hover over or tap any illuminated leaf on the branches to hear its quiet truth...
             </p>
           </div>
 
@@ -311,7 +264,7 @@
   <!-- ========================================================================= -->
   <!-- ACT IV: DESCENT INTO EARTH — MAITREE'S PORTFOLIO & LAB                    -->
   <!-- ========================================================================= -->
-  <main id="earth-section" class="relative w-full bg-gradient-to-b from-[#070e1c] via-[#091122] to-[#04060a] text-slate-100 py-24 px-6 sm:px-12 z-20 border-t border-white/10">
+  <main id="earth-section" class="relative w-full bg-gradient-to-b from-[#0c1f44] via-[#09152e] to-[#030714] text-slate-100 py-24 px-6 sm:px-12 z-20 border-t border-white/10">
     
     <!-- Floating Return to Stars Button -->
     <div class="fixed bottom-6 right-6 z-40">
@@ -328,7 +281,7 @@
       <section class="space-y-8 pt-8">
         <div class="inline-flex items-center space-x-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
           <span class="w-2.5 h-2.5 rounded-full bg-bioamber animate-ping"></span>
-          <span class="text-xs font-mono text-bioamber font-semibold uppercase tracking-widest">Act IV // The Human Observer</span>
+          <span class="text-xs font-mono text-bioamber font-semibold uppercase tracking-widest">The Human Observer</span>
           <span class="text-slate-500">•</span>
           <span class="text-xs text-slate-300">San Francisco / MIT Media Lab Inspiration</span>
         </div>
@@ -338,7 +291,7 @@
         </h1>
 
         <p class="text-xl sm:text-2xl text-slate-300 max-w-3xl font-serif italic leading-relaxed font-light">
-          "I want to learn humans — our behavioral loops, hidden vulnerabilities, and psychological instincts — so we can build artificial intelligence with radical empathy to help progress humanity."
+          I want to learn humans — our behavioral loops, hidden vulnerabilities, and psychological instincts — so we can build artificial intelligence with radical empathy to help progress humanity.
         </p>
 
         <p class="text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed">
@@ -395,7 +348,7 @@
                 <span>✦ A Seed to Spark Reflection</span>
               </div>
               <h2 id="earth-idea-title" class="text-2xl sm:text-3xl font-serif italic text-white transition-all duration-300">
-                "How can AI decode subtle behavioral rhythms to prevent burnout and restore human connection?"
+                How can AI decode subtle behavioral rhythms to prevent burnout and restore human connection?
               </h2>
             </div>
             <button id="spark-inquiry-btn" class="self-start sm:self-auto px-6 py-3 bg-gradient-to-r from-biocoral to-bioamber text-slate-950 font-bold rounded-2xl transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center space-x-2 shadow-lg shadow-rose-500/20 font-mono text-xs shrink-0">

@@ -10,7 +10,12 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #030508;
+  background-color: #050a18;
+  background-image: 
+    radial-gradient(at 20% 15%, rgba(20, 55, 110, 0.45) 0px, transparent 60%),
+    radial-gradient(at 80% 85%, rgba(15, 45, 95, 0.4) 0px, transparent 60%),
+    linear-gradient(180deg, #060c1d 0%, #030611 100%);
+  background-attachment: fixed;
   color: #f1f5f9;
   overflow-x: hidden;
   user-select: none;
@@ -37,9 +42,24 @@ html, body {
   left: 0;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.05s ease-out;
-  filter: drop-shadow(0 0 12px rgba(253, 224, 71, 0.95));
+  will-change: transform;
+}
+
+@keyframes slowDotBlink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 16px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5), 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.blinking-dot {
+  animation: slowDotBlink 3.2s infinite ease-in-out;
 }
 
 #stardust-canvas {
@@ -57,13 +77,13 @@ html, body {
    -------------------------------------------------------------------------- */
 .falling-line {
   opacity: 0;
-  transform: translate3d(0, -45px, 0);
-  filter: blur(6px);
-  transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+  transform: translate3d(0, -35px, 0);
+  filter: blur(8px);
 }
 
-.falling-line.in-view {
-  opacity: 1;
+.falling-line:first-child {
+  opacity: 0.55;
   transform: translate3d(0, 0, 0);
   filter: blur(0px);
 }

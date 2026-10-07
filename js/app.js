@@ -3,9 +3,9 @@
  * Coordinates all scenes, hardware-accelerated cameras, and interactions
  */
 
-import { initCursor } from './core/cursor.js';
+import { initCursor, launchStarFairyFlight } from './core/cursor.js';
 import { initScroller, goToScene, scrollToEarth, scrollToStars, toggleAutoDrift } from './core/scroller.js';
-import { initStardustScene } from './scenes/stardust.js';
+import { initStardustScene, playStardustPoem, replayStardustPoem } from './scenes/stardust.js';
 import { initSynapsesScene } from './scenes/synapses.js';
 import { initTreeScene } from './scenes/tree.js';
 
@@ -14,6 +14,9 @@ window.goToScene = goToScene;
 window.scrollToEarth = scrollToEarth;
 window.scrollToStars = scrollToStars;
 window.autoGlideToggle = toggleAutoDrift;
+window.launchStarFairyFlight = launchStarFairyFlight;
+window.playStardustPoem = playStardustPoem;
+window.replayStardustPoem = replayStardustPoem;
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Initialize Core Engines
@@ -54,7 +57,7 @@ function initInquiryGenerator() {
         duration: 0.18,
         onComplete: () => {
           currentIdx = (currentIdx + 1) % inquiries.length;
-          titleEl.innerText = `"${inquiries[currentIdx]}"`;
+          titleEl.innerText = inquiries[currentIdx];
           gsap.to(titleEl, {
             opacity: 1,
             y: 0,
@@ -66,7 +69,7 @@ function initInquiryGenerator() {
       gsap.fromTo(sparkBtn, { scale: 0.9 }, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.4)" });
     } else {
       currentIdx = (currentIdx + 1) % inquiries.length;
-      titleEl.innerText = `"${inquiries[currentIdx]}"`;
+      titleEl.innerText = inquiries[currentIdx];
     }
   });
 }
