@@ -131,12 +131,14 @@ const CORTEX_FRAGMENT_SHADER = `
     float hMinDist = min(hd1, min(hd2, hd3));
     float hoverGlow = smoothstep(1.2, 0.15, hMinDist) * uHoverStrength;
 
-    vec3 obsidianRim = mix(vec3(0.01, 0.05, 0.12), uBaseColor, fresnel * 0.75);
-    vec3 finalColor = mix(obsidianRim, uEmotionColor, regionGlow * 0.88);
-    finalColor = mix(finalColor, uHoverColor * 1.25, clamp(hoverGlow * 0.9, 0.0, 1.0));
+    // Cool silver-pearl cortical glass on non-highlighted brain; vivid jewel pigment on highlighted region
+    vec3 silverRim = vec3(0.68, 0.74, 0.82);
+    vec3 glassRim = mix(vec3(0.88, 0.91, 0.95), silverRim, fresnel * 0.85);
+    vec3 finalColor = mix(glassRim, uEmotionColor * 0.9, clamp(regionGlow * 1.15, 0.0, 1.0));
+    finalColor = mix(finalColor, uHoverColor * 0.9, clamp(hoverGlow * 1.15, 0.0, 1.0));
 
-    float alpha = (fresnel * 0.19 + noiseField * 0.025 + regionGlow * 0.18 + hoverGlow * 0.24) * uZoomFade;
-    gl_FragColor = vec4(clamp(finalColor, vec3(0.0), vec3(2.5)), clamp(alpha, 0.0, 0.52));
+    float alpha = (fresnel * 0.16 + noiseField * 0.02 + regionGlow * 0.30 + hoverGlow * 0.34) * uZoomFade;
+    gl_FragColor = vec4(clamp(finalColor, vec3(0.0), vec3(1.0)), clamp(alpha, 0.0, 0.56));
   }
 `;
 
@@ -220,19 +222,28 @@ const FILAMENT_FRAGMENT_SHADER = `
     float hoverMask = smoothstep(1.2, 0.15, hMinDist) * uHoverStrength;
 
     // Smoothly isolate the traveling wave to the active or hovered region
+    float isolateFactor = clamp(max(uIsolateRegion, uHoverStrength * 1.35), 0.0, 1.0);
     float activeOrHoverMask = max(regionMask, hoverMask);
-    float flowMask = mix(1.0, smoothstep(0.0, 0.5, activeOrHoverMask), uIsolateRegion);
-    float wave = mix(0.35, vProgress, flowMask);
+    float focusMask = smoothstep(0.05, 0.55, activeOrHoverMask);
+    float flowMask = mix(1.0, focusMask, isolateFactor);
+    float wave = mix(0.2, vProgress, flowMask);
 
-    vec3 restTint = mix(vec3(0.04, 0.16, 0.36), uBaseColor, 0.45);
-    vec3 activeTint = mix(restTint, uEmotionColor, clamp(regionMask * 1.15, 0.0, 1.0));
-    activeTint = mix(activeTint, uHoverColor, clamp(hoverMask * 1.15 + vCursorGlow * 0.45, 0.0, 1.0));
+    // Non-highlighted brain neurons turn cool neutral silver-grey so highlighted emotion neurons pop dramatically
+    vec3 inactiveSilver = vec3(0.60, 0.66, 0.74);
+    vec3 wholeBrainGradient = mix(uBaseColor, uEmotionColor, 0.35 + 0.65 * vUv.x);
+    vec3 restTint = mix(wholeBrainGradient, inactiveSilver, isolateFactor);
 
-    vec3 waveColor = mix(activeTint * 0.28, activeTint * (1.35 + activeOrHoverMask * 1.15), wave);
-    waveColor += uHoverColor * (vCursorGlow * 0.9 + hoverMask * wave * 0.55);
+    vec3 activeTint = mix(restTint, uEmotionColor, clamp(smoothstep(0.04, 0.52, regionMask) * 1.15, 0.0, 1.0));
+    activeTint = mix(activeTint, uHoverColor, clamp(smoothstep(0.04, 0.52, hoverMask) * 1.15, 0.0, 1.0));
+    activeTint = mix(activeTint, uEmotionColor, clamp(vCursorGlow * 0.35, 0.0, 1.0));
 
-    float alpha = tipFade * (0.22 + wave * 0.52 + activeOrHoverMask * 0.48 + vCursorGlow * 0.5) * uOpacityScale;
-    gl_FragColor = vec4(clamp(waveColor, vec3(0.0), vec3(3.5)), clamp(alpha, 0.0, 0.95));
+    // Deepen highlighted wave peaks for vivid jewel contrast against silver-grey inactive tracts
+    vec3 waveColor = mix(activeTint, activeTint * 0.72, wave * focusMask * 0.65);
+
+    float inactiveAlpha = mix(0.34, 0.11, isolateFactor);
+    float activeBoost = focusMask * 0.72 + wave * 0.35 * flowMask + vCursorGlow * 0.28;
+    float alpha = tipFade * (inactiveAlpha + activeBoost) * uOpacityScale;
+    gl_FragColor = vec4(clamp(waveColor, vec3(0.0), vec3(1.0)), clamp(alpha, 0.0, 0.96));
   }
 `;
 
@@ -244,6 +255,7 @@ const IMPULSE_VERTEX_SHADER = `
   attribute float aRandom;
   varying float vRegionMask;
   varying float vHoverMask;
+  varying float vCursorFocus;
 
   uniform vec3 uLocus1;
   uniform vec3 uLocus2;
@@ -255,6 +267,7 @@ const IMPULSE_VERTEX_SHADER = `
   uniform vec3 uHoverLocus3;
   uniform vec3 uHoverRadii;
   uniform float uHoverStrength;
+  uniform vec3 uMouse3D;
 
   void main() {
     float d1 = length(position - uLocus1) / max(0.05, uLocusRadii.x);
@@ -269,39 +282,54 @@ const IMPULSE_VERTEX_SHADER = `
     float hMinDist = min(hd1, min(hd2, hd3));
     vHoverMask = smoothstep(1.2, 0.15, hMinDist) * uHoverStrength;
 
+    // Slight local focus on individual cells near the 3D cursor
+    float cursorDist = length(uMouse3D - position);
+    vCursorFocus = smoothstep(0.42, 0.02, cursorDist);
+
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * mvPosition;
 
-    float sizeBoost = 1.0 + max(vRegionMask, vHoverMask) * 1.35;
-    gl_PointSize = clamp(aRandom * 18.0 * sizeBoost * (1.0 / max(0.25, -mvPosition.z)), 1.5, 26.0);
+    float sizeBoost = 0.85 + max(vRegionMask, vHoverMask) * 1.45 + vCursorFocus * 0.5;
+    gl_PointSize = clamp(aRandom * 18.0 * sizeBoost * (1.0 / max(0.25, -mvPosition.z)), 1.5, 25.0);
   }
 `;
 
 const IMPULSE_FRAGMENT_SHADER = `
   varying float vRegionMask;
   varying float vHoverMask;
+  varying float vCursorFocus;
 
   uniform vec3 uBaseColor;
   uniform vec3 uEmotionColor;
   uniform vec3 uHoverColor;
   uniform float uIsolateRegion;
+  uniform float uHoverStrength;
 
   void main() {
     float dist = length(gl_PointCoord.xy - vec2(0.5));
     if (dist > 0.5) discard;
 
     float core = smoothstep(0.5, 0.08, dist);
-    vec3 baseTint = mix(uBaseColor, vec3(0.8, 0.96, 1.0), 0.35);
-    vec3 activeTint = mix(uEmotionColor, vec3(1.0, 0.98, 0.95), 0.38);
-    vec3 hoverTint = mix(uHoverColor, vec3(1.0, 0.98, 0.95), 0.38);
+    float isolateFactor = clamp(max(uIsolateRegion, uHoverStrength * 1.35), 0.0, 1.0);
 
-    vec3 color = mix(baseTint, activeTint, clamp(vRegionMask * 1.2, 0.0, 1.0));
-    color = mix(color, hoverTint, clamp(vHoverMask * 1.2, 0.0, 1.0));
+    // Non-highlighted cells become cool muted slate-silver; highlighted cells glow with pure emotion pigment
+    vec3 restingBase = mix(uBaseColor, vec3(0.20, 0.28, 0.42), 0.35);
+    vec3 inactiveSilver = vec3(0.58, 0.64, 0.72);
+    vec3 baseTint = mix(restingBase, inactiveSilver, isolateFactor);
 
-    float combinedMask = max(vRegionMask, vHoverMask);
-    float flowAlpha = mix(0.28 + combinedMask * 0.68, combinedMask * 0.95, uIsolateRegion);
+    vec3 activeTint = uEmotionColor * 0.85;
+    vec3 hoverTint = uHoverColor * 0.85;
+
+    float rFocus = smoothstep(0.04, 0.5, vRegionMask);
+    float hFocus = smoothstep(0.04, 0.5, vHoverMask);
+
+    vec3 color = mix(baseTint, activeTint, clamp(rFocus * 1.2 + vCursorFocus * 0.45, 0.0, 1.0));
+    color = mix(color, hoverTint, clamp(hFocus * 1.2, 0.0, 1.0));
+
+    float combinedFocus = max(rFocus, hFocus);
+    float flowAlpha = mix(0.48 + combinedFocus * 0.42 + vCursorFocus * 0.3, 0.06 + combinedFocus * 0.90 + vCursorFocus * 0.35, isolateFactor);
     float alpha = core * flowAlpha;
-    gl_FragColor = vec4(clamp(color * (1.1 + combinedMask * 0.9), vec3(0.0), vec3(3.5)), clamp(alpha, 0.0, 0.95));
+    gl_FragColor = vec4(clamp(color, vec3(0.0), vec3(1.0)), clamp(alpha, 0.0, 0.96));
   }
 `;
 
@@ -355,7 +383,7 @@ export class Brain3DEngine {
 
     // 1. Scene & Camera
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x010308, 0.065);
+    this.scene.fog = new THREE.FogExp2(0xf8fafc, 0.045);
 
     this.camera = new THREE.PerspectiveCamera(42, width / height, 0.03, 100);
     this.camera.position.set(0.0, 0.35, 3.65);
@@ -365,13 +393,12 @@ export class Brain3DEngine {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       powerPreference: 'high-performance',
-      alpha: false
+      alpha: true
     });
-    this.renderer.setClearColor(0x010308, 1);
+    this.renderer.setClearColor(0xf8fafc, 0);
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(dpr);
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.12;
+    this.renderer.toneMapping = THREE.NoToneMapping;
     this.renderer.domElement.style.touchAction = 'pan-y';
     this.container.appendChild(this.renderer.domElement);
 
@@ -411,15 +438,15 @@ export class Brain3DEngine {
     this.sharedUniforms = {
       uTime: { value: 0 },
       uZoomFade: { value: 1.0 },
-      uBaseColor: { value: new THREE.Color('#05D5FF') },
-      uEmotionColor: { value: new THREE.Color('#05D5FF') },
+      uBaseColor: { value: new THREE.Color('#4f46e5') },
+      uEmotionColor: { value: new THREE.Color('#0284c7') },
       uLocus1: { value: new THREE.Vector3(-0.35, 0.48, 0.95) },
       uLocus2: { value: new THREE.Vector3(0.35, 0.48, 0.95) },
       uLocus3: { value: new THREE.Vector3(0.0, 0.52, -0.78) },
       uLocusRadii: { value: new THREE.Vector3(0.85, 0.85, 0.9) },
       uHighlightStrength: { value: 0.55 },
       uIsolateRegion: { value: 0.0 },
-      uHoverColor: { value: new THREE.Color('#FF2A85') },
+      uHoverColor: { value: new THREE.Color('#e11d48') },
       uHoverLocus1: { value: new THREE.Vector3(0, 0, 0) },
       uHoverLocus2: { value: new THREE.Vector3(0, 0, 0) },
       uHoverLocus3: { value: new THREE.Vector3(0, 0, 0) },
@@ -532,7 +559,7 @@ export class Brain3DEngine {
         depthTest: false,
         depthWrite: false,
         side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending
+        blending: THREE.NormalBlending
       });
 
       const mesh = new THREE.Mesh(tubeGeo, mat);
@@ -560,12 +587,13 @@ export class Brain3DEngine {
         uHoverLocus2: this.sharedUniforms.uHoverLocus2,
         uHoverLocus3: this.sharedUniforms.uHoverLocus3,
         uHoverRadii: this.sharedUniforms.uHoverRadii,
-        uHoverStrength: this.sharedUniforms.uHoverStrength
+        uHoverStrength: this.sharedUniforms.uHoverStrength,
+        uMouse3D: this.sharedUniforms.uMouse3D
       },
       transparent: true,
       depthWrite: false,
       side: THREE.FrontSide,
-      blending: THREE.AdditiveBlending
+      blending: THREE.NormalBlending
     });
 
     const leftScan = this.scanVertices.filter((v) => v.x <= 0.04);
@@ -673,12 +701,13 @@ export class Brain3DEngine {
         uHoverLocus2: this.sharedUniforms.uHoverLocus2,
         uHoverLocus3: this.sharedUniforms.uHoverLocus3,
         uHoverRadii: this.sharedUniforms.uHoverRadii,
-        uHoverStrength: this.sharedUniforms.uHoverStrength
+        uHoverStrength: this.sharedUniforms.uHoverStrength,
+        uMouse3D: this.sharedUniforms.uMouse3D
       },
       transparent: true,
       depthTest: false,
       depthWrite: false,
-      blending: THREE.AdditiveBlending
+      blending: THREE.NormalBlending
     });
 
     this.impulsePoints = new THREE.Points(this.impulseGeo, this.impulseMat);
@@ -700,12 +729,12 @@ export class Brain3DEngine {
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     const staticNodeMat = new THREE.PointsMaterial({
-      color: 0x38bdf8,
-      size: 0.013,
+      color: 0x475569,
+      size: 0.012,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.22,
       depthWrite: false,
-      blending: THREE.AdditiveBlending
+      blending: THREE.NormalBlending
     });
 
     this.scanCloudPoints = new THREE.Points(geo, staticNodeMat);
@@ -843,12 +872,45 @@ export class Brain3DEngine {
     }
   }
 
+  setHoveredEmotionPreview(emo) {
+    if (emo === this.hoveredEmotion) return;
+    this.hoveredEmotion = emo;
+    if (emo) {
+      this.targetHoverColor.set(emo.color);
+      const hl1 = emo.loci[0] || { x: 0, y: 0, z: 0, radius: 0.65 };
+      const hl2 = emo.loci[1] || hl1;
+      const hl3 = emo.loci[2] || hl1;
+      this.sharedUniforms.uHoverLocus1.value.set(hl1.x, hl1.y, hl1.z);
+      this.sharedUniforms.uHoverLocus2.value.set(hl2.x, hl2.y, hl2.z);
+      this.sharedUniforms.uHoverLocus3.value.set(hl3.x, hl3.y, hl3.z);
+      this.sharedUniforms.uHoverRadii.value.set(hl1.radius, hl2.radius, hl3.radius);
+      this.targetHoverStrength = 0.85;
+    } else {
+      this.targetHoverStrength = 0.0;
+    }
+
+    if (this.callbacks.onEmotionHover) {
+      this.callbacks.onEmotionHover(emo);
+    }
+  }
+
   onPointerMove(e) {
     if (!this.renderer) return;
     const relX = e.pageX - this.containerLeft;
     const relY = e.pageY - this.containerTop;
     this.pointerNDC.x = (relX / this.containerWidth) * 2 - 1;
     this.pointerNDC.y = -(relY / this.containerHeight) * 2 + 1;
+
+    const insideCanvas =
+      this.pointerNDC.x >= -1.0 &&
+      this.pointerNDC.x <= 1.0 &&
+      this.pointerNDC.y >= -1.0 &&
+      this.pointerNDC.y <= 1.0;
+
+    if (!insideCanvas) {
+      this.targetMouse3D.set(99, 99, 99);
+      return;
+    }
 
     this.interactionPlane.normal.copy(this.camera.position).normalize();
     this.raycaster.setFromCamera(this.pointerNDC, this.camera);
@@ -857,19 +919,13 @@ export class Brain3DEngine {
       this.targetMouse3D.copy(this.tempVec);
     }
 
-    // Fast O(1) 3D Stereotactic Region Hover Detection (no mesh raycasting)
+    // Fast O(1) 3D Stereotactic Region Hover Detection with slight focus on cells
     if (this.isPointerDown) return;
 
     let bestEmotion = null;
     let bestScore = -999;
 
-    const insideCanvas =
-      this.pointerNDC.x >= -1.0 &&
-      this.pointerNDC.x <= 1.0 &&
-      this.pointerNDC.y >= -1.0 &&
-      this.pointerNDC.y <= 1.0;
-
-    if (insideCanvas && this.raycaster.ray.distanceToPoint(this.brainGroup.position) < 1.45) {
+    if (this.raycaster.ray.distanceToPoint(this.brainGroup.position) < 1.45) {
       for (let i = 1; i < EMOTIONS.length; i++) {
         const emo = EMOTIONS[i];
         const loci = emo.loci;
@@ -891,26 +947,7 @@ export class Brain3DEngine {
       }
     }
 
-    if (bestEmotion !== this.hoveredEmotion) {
-      this.hoveredEmotion = bestEmotion;
-      if (bestEmotion) {
-        this.targetHoverColor.set(bestEmotion.color);
-        const hl1 = bestEmotion.loci[0] || { x: 0, y: 0, z: 0, radius: 0.65 };
-        const hl2 = bestEmotion.loci[1] || hl1;
-        const hl3 = bestEmotion.loci[2] || hl1;
-        this.sharedUniforms.uHoverLocus1.value.set(hl1.x, hl1.y, hl1.z);
-        this.sharedUniforms.uHoverLocus2.value.set(hl2.x, hl2.y, hl2.z);
-        this.sharedUniforms.uHoverLocus3.value.set(hl3.x, hl3.y, hl3.z);
-        this.sharedUniforms.uHoverRadii.value.set(hl1.radius, hl2.radius, hl3.radius);
-        this.targetHoverStrength = 1.15;
-      } else {
-        this.targetHoverStrength = 0.0;
-      }
-
-      if (this.callbacks.onEmotionHover) {
-        this.callbacks.onEmotionHover(bestEmotion);
-      }
-    }
+    this.setHoveredEmotionPreview(bestEmotion);
   }
 
   onResize() {
@@ -984,7 +1021,7 @@ export class Brain3DEngine {
     }
 
     this.controls.update();
-    this.composer.render();
+    this.renderer.render(this.scene, this.camera);
   }
 }
 

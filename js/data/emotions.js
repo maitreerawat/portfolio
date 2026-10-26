@@ -14,12 +14,12 @@ export const EMOTIONS = [
     bodyPrimary:
       'The human mind is an ocean of eighty-six billion brain cells constantly talking to one another. Every memory you keep, every sudden hunch, and every emotion you feel begins as tiny electrical signals traveling from cell to cell.',
     bodySomatic:
-      'On the right, you are looking at a live 3D electrical-signals view of the human mind, traced from a real MRI scan. You can drag anywhere on the brain to rotate it 360°, hover over different areas to see which emotion lives there, and click any glowing region to explore it.',
+      'On the right, you are looking at a live 3D electrical-signals view of the human mind, traced from a real MRI scan. You can drag anywhere on the brain to rotate it 360° and hover over the pathways to gently bring nearby brain cells into focus.',
     bodySecondary:
-      'Along the bottom are core human emotions — Empathy, Wonder, Joy, Vulnerability, Memory, Imagination, and Grief. Click any emotion below (or on the brain) to light up its pathway, see the unique microscopic brain cell inside that region, and read how that feeling shows up in your eyes, lips, breath, and hands.',
-    color: '#05D5FF',
-    secondaryColor: '#1e40af',
-    hex: 0x05d5ff,
+      'Along the bottom are core human emotions — Empathy, Wonder, Joy, Vulnerability, Memory, Imagination, and Grief. Select any emotion below to light up its pathway, see the unique microscopic brain cell inside that region, and read how that feeling shows up in your eyes, lips, breath, and hands.',
+    color: '#0284c7',
+    secondaryColor: '#4f46e5',
+    hex: 0x0284c7,
     firingSpeed: 1.0,
     loci: [
       { x: -0.35, y: 0.48, z: 0.95, radius: 0.85 },
@@ -42,9 +42,9 @@ export const EMOTIONS = [
       'In your body, your pupils widen to take in the other person’s face, your eyebrows soften, and your lips part slightly as you unconsciously mirror what they are going through. Your hands naturally unclench and reach out to comfort them before you even think about it.',
     bodySecondary:
       'Your brain doesn’t just watch someone else’s pain or relief from the outside — it briefly feels a gentle echo of it inside your own body so you know how to care for them.',
-    color: '#fb7185',
-    secondaryColor: '#05D5FF',
-    hex: 0xfb7185,
+    color: '#e11d48',
+    secondaryColor: '#0284c7',
+    hex: 0xe11d48,
     firingSpeed: 1.45,
     loci: [
       { x: -0.82, y: 0.12, z: 0.42, radius: 0.68 },
@@ -67,9 +67,9 @@ export const EMOTIONS = [
       'In your body, your pupils open wide to let in as much light and detail as possible, and you almost stop blinking. Your lips part in a quiet, slow breath, goosebumps rise on your arms, and your hands go completely still as you take the moment in.',
     bodySecondary:
       'Wonder quiets down everyday worry and chatter in the brain, opening up fresh connections so you can learn and see the world in a new way.',
-    color: '#38bdf8',
-    secondaryColor: '#818cf8',
-    hex: 0x38bdf8,
+    color: '#4f46e5',
+    secondaryColor: '#0284c7',
+    hex: 0x4f46e5,
     firingSpeed: 1.65,
     loci: [
       { x: -0.45, y: 0.58, z: 1.12, radius: 0.72 },
@@ -92,9 +92,9 @@ export const EMOTIONS = [
       'Unlike a polite, fake smile that only moves your mouth, real joy automatically crinkles the outer corners of your eyes and lifts your cheeks. Your voice gets warmer and brighter, your shoulders relax, and your hands start moving and gesturing as you share the moment.',
     bodySecondary:
       'Joy gives your whole nervous system a burst of energy, making you want to connect, play, and share good things with the people around you.',
-    color: '#fbbf24',
-    secondaryColor: '#f59e0b',
-    hex: 0xfbbf24,
+    color: '#d97706',
+    secondaryColor: '#ea580c',
+    hex: 0xd97706,
     firingSpeed: 1.85,
     loci: [
       { x: -0.36, y: -0.04, z: 0.52, radius: 0.62 },
@@ -117,9 +117,9 @@ export const EMOTIONS = [
       'In your body, your eyes naturally dart between holding someone’s gaze and looking away for a second to catch your breath. Your throat and lips might feel a little dry or shaky, and your hands often touch your own chest or fold together while you summon the courage to speak.',
     bodySecondary:
       'Bravery is not the absence of that inner alarm — it happens when the front of your brain sends a calming signal to hold that nervousness gently so you can stay honest and open anyway.',
-    color: '#f43f5e',
-    secondaryColor: '#fb923c',
-    hex: 0xf43f5e,
+    color: '#dc2626',
+    secondaryColor: '#e11d48',
+    hex: 0xdc2626,
     firingSpeed: 2.1,
     loci: [
       { x: -0.52, y: -0.24, z: 0.26, radius: 0.56 },
@@ -141,9 +141,9 @@ export const EMOTIONS = [
       'As your mind pictures that memory, your eyes naturally drift upward or to the side as if looking at an invisible photograph. Your lips often form a quiet, bittersweet half-smile — holding both warmth and missing someone at the same time — while your hands relax.',
     bodySecondary:
       'Memories aren’t frozen files locked in a vault. Every time you remember a person or place you love, your brain gently blends that old moment with who you are today.',
-    color: '#a78bfa',
-    secondaryColor: '#38bdf8',
-    hex: 0xa78bfa,
+    color: '#7c3aed',
+    secondaryColor: '#4f46e5',
+    hex: 0x7c3aed,
     firingSpeed: 1.25,
     loci: [
       { x: -0.68, y: -0.15, z: -0.58, radius: 0.72 },
@@ -166,9 +166,9 @@ export const EMOTIONS = [
       'When you picture an idea inside your head, your eyelids often half-close or look into the distance so outside distractions fade away. Your mouth goes quiet in focus, and your hands often sketch in the air or start building before you even find the words.',
     bodySecondary:
       'Intuition isn’t magic — it is the back of your brain quietly weaving together everything you have ever seen, felt, and learned into a brand-new idea.',
-    color: '#c084fc',
-    secondaryColor: '#38bdf8',
-    hex: 0xc084fc,
+    color: '#9333ea',
+    secondaryColor: '#6366f1',
+    hex: 0x9333ea,
     firingSpeed: 1.55,
     loci: [
       { x: -0.35, y: 0.32, z: -1.22, radius: 0.78 },
@@ -191,9 +191,9 @@ export const EMOTIONS = [
       'To help you heal, willow-shaped cells at the base of your brain send soothing signals down to your chest: warm tears well up in your eyes to release stress, your lower lip may tremble, and a deep sigh or exhale slowly softens the tightness in your throat while your hands rest over your heart.',
     bodySecondary:
       'Crying and exhaling are not signs of weakness — they are how your brain slowly calms the body and turns the pain of loss into lasting love and memory.',
-    color: '#34d399',
-    secondaryColor: '#05D5FF',
-    hex: 0x34d399,
+    color: '#059669',
+    secondaryColor: '#0284c7',
+    hex: 0x059669,
     firingSpeed: 0.9,
     loci: [
       { x: 0.0, y: 0.12, z: 0.78, radius: 0.65 },

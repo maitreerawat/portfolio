@@ -10,8 +10,16 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #010308;
-  color: #f1f5f9;
+  background-color: #fafbfd;
+  background-image:
+    radial-gradient(at 12% 10%, rgba(224, 242, 254, 0.65) 0px, transparent 52%),
+    radial-gradient(at 85% 16%, rgba(237, 233, 254, 0.58) 0px, transparent 52%),
+    radial-gradient(at 22% 46%, rgba(255, 228, 230, 0.42) 0px, transparent 55%),
+    radial-gradient(at 82% 62%, rgba(209, 250, 229, 0.38) 0px, transparent 54%),
+    radial-gradient(at 18% 84%, rgba(254, 243, 199, 0.42) 0px, transparent 52%),
+    radial-gradient(at 78% 92%, rgba(224, 231, 255, 0.48) 0px, transparent 52%);
+  background-attachment: fixed;
+  color: #0f172a;
   overflow-x: hidden;
   user-select: none;
   -webkit-font-smoothing: antialiased;
@@ -34,12 +42,12 @@ html, body {
   0%, 100% {
     opacity: 1;
     transform: scale(1);
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 16px rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 6px rgba(14, 165, 233, 0.9), 0 0 14px rgba(14, 165, 233, 0.5);
   }
   50% {
-    opacity: 0.35;
+    opacity: 0.45;
     transform: scale(0.8);
-    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5), 0 0 6px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 2px rgba(14, 165, 233, 0.5), 0 0 6px rgba(14, 165, 233, 0.25);
   }
 }
 
@@ -84,13 +92,14 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   Subtle Bottom Bar Glass
+   Subtle Bottom Bar Glass (Light Theme)
    -------------------------------------------------------------------------- */
 .bottom-bar-glass {
-  background: rgba(3, 8, 20, 0.58);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
 }
 
 ::-webkit-scrollbar {

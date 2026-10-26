@@ -32,13 +32,25 @@ function initBrainSandbox() {
       btn.type = 'button';
       btn.dataset.emotionId = emo.id;
       btn.className =
-        'emotion-pill px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all duration-300 flex items-center space-x-2 text-white border border-transparent';
+        'emotion-pill px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all duration-300 flex items-center space-x-2 text-slate-900 border border-transparent';
 
       btn.innerHTML = `
         <span class="w-1.5 h-1.5 rounded-full shrink-0 transition-transform duration-300"
               style="background-color: ${emo.color}; box-shadow: 0 0 8px ${emo.color};"></span>
         <span>${emo.name}</span>
       `;
+
+      btn.addEventListener('mouseenter', () => {
+        if (brainEngine) {
+          brainEngine.setHoveredEmotionPreview(emo);
+        }
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        if (brainEngine) {
+          brainEngine.setHoveredEmotionPreview(null);
+        }
+      });
 
       btn.addEventListener('click', () => {
         if (brainEngine) {
@@ -72,15 +84,15 @@ function updateHoveredTileUI(hoveredEmo, activeEmo) {
     const isHovered = hoveredEmo && id === hoveredEmo.id;
 
     if (isActive) {
-      pill.style.color = '#ffffff';
-      pill.style.borderColor = 'rgba(255, 255, 255, 0.28)';
-      pill.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+      pill.style.color = '#0f172a';
+      pill.style.borderColor = 'rgba(15, 23, 42, 0.25)';
+      pill.style.backgroundColor = 'rgba(15, 23, 42, 0.08)';
     } else if (isHovered) {
-      pill.style.color = hoveredEmo.color;
+      pill.style.color = '#0f172a';
       pill.style.borderColor = hoveredEmo.color;
-      pill.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+      pill.style.backgroundColor = 'rgba(15, 23, 42, 0.04)';
     } else {
-      pill.style.color = '#f8fafc';
+      pill.style.color = '#334155';
       pill.style.borderColor = 'transparent';
       pill.style.backgroundColor = 'transparent';
     }
@@ -94,11 +106,11 @@ function updateBottomTilesUI(emo) {
   pills.forEach((pill) => {
     const isActive = pill.dataset.emotionId === emo.id;
     if (isActive) {
-      pill.style.color = '#ffffff';
-      pill.style.borderColor = 'rgba(255, 255, 255, 0.24)';
-      pill.style.backgroundColor = 'rgba(255, 255, 255, 0.09)';
+      pill.style.color = '#0f172a';
+      pill.style.borderColor = 'rgba(15, 23, 42, 0.22)';
+      pill.style.backgroundColor = 'rgba(15, 23, 42, 0.08)';
     } else {
-      pill.style.color = '#f8fafc';
+      pill.style.color = '#334155';
       pill.style.borderColor = 'transparent';
       pill.style.backgroundColor = 'transparent';
     }
@@ -115,16 +127,28 @@ function updateBottomTilesUI(emo) {
 
   const applyCopy = () => {
     if (headingEl) headingEl.textContent = emo.heading;
-    if (regionEl) regionEl.textContent = emo.regionName;
+    const c1 = neuronStudy ? neuronStudy.hexToRgb(emo.color) : { r: 2, g: 132, b: 199 };
+    const c2 = neuronStudy ? neuronStudy.hexToRgb(emo.secondaryColor || emo.color) : c1;
+
+    if (regionEl) {
+      regionEl.textContent = emo.regionName;
+      regionEl.style.color = `rgba(${c1.r}, ${c1.g}, ${c1.b}, 0.82)`;
+    }
     if (primaryEl) primaryEl.textContent = emo.bodyPrimary;
     if (somaticEl) somaticEl.textContent = emo.bodySomatic;
     if (secondaryEl) secondaryEl.textContent = emo.bodySecondary;
+
+    const ambientWashEl = document.getElementById('brain-ambient-wash');
+    if (ambientWashEl) {
+      ambientWashEl.style.background = `radial-gradient(circle at 72% 45%, rgba(${c1.r}, ${c1.g}, ${c1.b}, 0.08) 0%, rgba(${c2.r}, ${c2.g}, ${c2.b}, 0.04) 38%, transparent 70%), radial-gradient(circle at 22% 35%, rgba(${c1.r}, ${c1.g}, ${c1.b}, 0.05) 0%, transparent 55%)`;
+    }
 
     if (neuronBlockEl) {
       if (emo.id === 'resting') {
         neuronBlockEl.classList.add('hidden');
       } else {
         neuronBlockEl.classList.remove('hidden');
+        neuronBlockEl.style.background = `linear-gradient(120deg, rgba(${c1.r}, ${c1.g}, ${c1.b}, 0.065) 0%, rgba(${c2.r}, ${c2.g}, ${c2.b}, 0.045) 100%)`;
         if (neuronStudy) {
           neuronStudy.resize();
           neuronStudy.setEmotion(emo);
@@ -228,19 +252,20 @@ class NeuronMorphologyStudy {
 
   updateLabel() {
     if (!this.labelEl) return;
+    const c = this.targetRgb || { r: 71, g: 85, b: 105 };
     if (this.hoveredPart) {
       this.labelEl.textContent = this.hoveredPart.name;
-      this.labelEl.style.color = this.currentEmo.color || '#38bdf8';
+      this.labelEl.style.color = `rgba(${c.r}, ${c.g}, ${c.b}, 0.88)`;
       if (this.descEl) {
         this.descEl.textContent = this.hoveredPart.desc;
-        this.descEl.style.color = '#e2e8f0';
+        this.descEl.style.color = '#475569';
       }
     } else {
       this.labelEl.textContent = this.currentEmo.neuronType;
-      this.labelEl.style.color = '#e2e8f0';
+      this.labelEl.style.color = `rgba(${c.r}, ${c.g}, ${c.b}, 0.78)`;
       if (this.descEl && this.currentEmo.neuronSimpleDesc) {
         this.descEl.textContent = this.currentEmo.neuronSimpleDesc;
-        this.descEl.style.color = 'rgba(148, 163, 184, 0.95)';
+        this.descEl.style.color = '#64748b';
       }
     }
   }
@@ -594,7 +619,7 @@ class NeuronMorphologyStudy {
     ctx.save();
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, this.width, this.height);
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalCompositeOperation = 'source-over';
 
     // 1. Draw living, breathing dendritic and axonal branches
     for (let i = 0; i < this.branches.length; i++) {
@@ -616,16 +641,14 @@ class NeuronMorphologyStudy {
         }
       }
 
-      const boost = isPartHovered ? 2.1 : 1.0;
-      const alpha = Math.min(0.95, 0.28 * br.weight * boost * this.transitionAlpha);
+      const boost = isPartHovered ? 1.28 : 1.0;
+      const alpha = Math.min(0.88, 0.42 * br.weight * boost * this.transitionAlpha);
 
       ctx.beginPath();
       ctx.moveTo(br.x0, br.y0);
       ctx.quadraticCurveTo(br.cx + swayX, br.cy + swayY, br.x1 + swayX * 0.6, br.y1 + swayY * 0.6);
-      ctx.strokeStyle = isPartHovered
-        ? `rgba(255, 255, 255, ${alpha * 0.85})`
-        : `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      ctx.lineWidth = Math.max(0.65, 1.2 * br.weight * (isPartHovered ? 1.45 : 1.0));
+      ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      ctx.lineWidth = Math.max(0.75, 1.25 * br.weight * (isPartHovered ? 1.22 : 1.0));
       ctx.stroke();
     }
 
@@ -634,13 +657,11 @@ class NeuronMorphologyStudy {
       const sp = this.spines[i];
       const isSpineHovered = this.hoveredPart && this.hoveredPart.type === 'spine';
       const pulse = 0.5 + 0.5 * Math.sin(time * 3.8 + i * 0.9);
-      const rad = (isSpineHovered ? 2.6 : 1.7) * (0.85 + 0.3 * pulse);
+      const rad = (isSpineHovered ? 2.2 : 1.75) * (0.85 + 0.3 * pulse);
 
       ctx.beginPath();
       ctx.arc(sp.x, sp.y, rad, 0, Math.PI * 2);
-      ctx.fillStyle = isSpineHovered
-        ? `rgba(255, 255, 255, ${0.7 + 0.3 * pulse})`
-        : `rgba(${r}, ${g}, ${b}, ${0.4 + 0.45 * pulse})`;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${(isSpineHovered ? 0.68 : 0.5) + 0.32 * pulse})`;
       ctx.fill();
     }
 
@@ -649,12 +670,12 @@ class NeuronMorphologyStudy {
     for (let i = 0; i < this.somas.length; i++) {
       const s = this.somas[i];
       const isSomaHovered = this.hoveredPart && this.hoveredPart.name === s.partName;
-      const scale = somaBeat * (isSomaHovered ? 1.22 : 1.0);
+      const scale = somaBeat * (isSomaHovered ? 1.12 : 1.0);
 
       // Outer bioluminescent soma halo
       ctx.beginPath();
       ctx.ellipse(s.x, s.y, s.rx * 1.85 * scale, s.ry * 1.85 * scale, 0, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${isSomaHovered ? 0.38 : 0.22})`;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${isSomaHovered ? 0.35 : 0.22})`;
       ctx.fill();
 
       // Inner soma body
@@ -667,13 +688,13 @@ class NeuronMorphologyStudy {
       } else {
         ctx.ellipse(s.x, s.y, s.rx * scale, s.ry * scale, 0, 0, Math.PI * 2);
       }
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${isSomaHovered ? 0.88 : 0.68})`;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${isSomaHovered ? 0.95 : 0.8})`;
       ctx.fill();
 
-      // Bright nucleus core
+      // Nucleus core
       ctx.beginPath();
       ctx.arc(s.x, s.y, Math.min(s.rx, s.ry) * 0.48 * scale, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.fill();
     }
 
@@ -700,12 +721,12 @@ class NeuronMorphologyStudy {
 
       ctx.beginPath();
       ctx.arc(x, y, 3.1, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${0.36 * env})`;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${0.45 * env})`;
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(x, y, 1.25, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.92 * env})`;
+      ctx.arc(x, y, 1.35, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(15, 23, 42, ${0.85 * env})`;
       ctx.fill();
     }
 
@@ -732,12 +753,12 @@ class BrainAxisCompass {
     this.canvas.height = this.size * this.dpr;
 
     this.axes = [
-      { id: 'front', label: 'FRONT', axisTag: '+Z', lx: 0, ly: 0, lz: 1, color: '#05D5FF', viewName: 'Front (Frontal Lobe)', primary: true },
-      { id: 'back', label: 'BACK', axisTag: '-Z', lx: 0, ly: 0, lz: -1, color: '#A855F7', viewName: 'Back of the Mind', primary: false },
-      { id: 'top', label: 'TOP', axisTag: '+Y', lx: 0, ly: 1, lz: 0, color: '#10B981', viewName: 'Top Crown', primary: true },
-      { id: 'base', label: 'BASE', axisTag: '-Y', lx: 0, ly: -1, lz: 0, color: '#64748B', viewName: 'Base & Brainstem', primary: false },
-      { id: 'right', label: 'RIGHT', axisTag: '+X', lx: 1, ly: 0, lz: 0, color: '#FFAA00', viewName: 'Right Hemisphere', primary: true },
-      { id: 'left', label: 'LEFT', axisTag: '-X', lx: -1, ly: 0, lz: 0, color: '#FF2A85', viewName: 'Left Hemisphere', primary: false }
+      { id: 'front', label: 'FRONT', axisTag: '+Z', lx: 0, ly: 0, lz: 1, color: '#0284c7', viewName: 'Front (Frontal Lobe)', primary: true },
+      { id: 'back', label: 'BACK', axisTag: '-Z', lx: 0, ly: 0, lz: -1, color: '#7c3aed', viewName: 'Back of the Mind', primary: false },
+      { id: 'top', label: 'TOP', axisTag: '+Y', lx: 0, ly: 1, lz: 0, color: '#059669', viewName: 'Top Crown', primary: true },
+      { id: 'base', label: 'BASE', axisTag: '-Y', lx: 0, ly: -1, lz: 0, color: '#475569', viewName: 'Base & Brainstem', primary: false },
+      { id: 'right', label: 'RIGHT', axisTag: '+X', lx: 1, ly: 0, lz: 0, color: '#d97706', viewName: 'Right Hemisphere', primary: true },
+      { id: 'left', label: 'LEFT', axisTag: '-X', lx: -1, ly: 0, lz: 0, color: '#e11d48', viewName: 'Left Hemisphere', primary: false }
     ];
 
     this.projected = [];
@@ -802,7 +823,7 @@ class BrainAxisCompass {
     // Subtle 3D orbital reference sphere ring
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.14)';
+    ctx.strokeStyle = 'rgba(15, 23, 42, 0.16)';
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -835,7 +856,7 @@ class BrainAxisCompass {
       ctx.font = '500 7.5px "Space Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = p.vz > -0.15 ? '#e2e8f0' : 'rgba(148, 163, 184, 0.55)';
+      ctx.fillStyle = p.vz > -0.15 ? '#0f172a' : 'rgba(71, 85, 105, 0.6)';
       ctx.globalAlpha = Math.max(0.35, depthAlpha * 0.95);
       ctx.fillText(p.label, lx, ly);
     }
@@ -843,7 +864,7 @@ class BrainAxisCompass {
     // Center origin pivot dot
     ctx.beginPath();
     ctx.arc(cx, cy, 2.0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
     ctx.globalAlpha = 1.0;
     ctx.fill();
 

@@ -72,9 +72,9 @@ function emitFairyDustAlongPath(fromX, fromY, toX, toY) {
       alpha: Math.random() * 0.35 + 0.65,
       twinkle: Math.random() * Math.PI * 2,
       twinkleSpeed: Math.random() * 0.12 + 0.04,
-      r: 255,
-      g: 255,
-      b: 255,
+      r: 2,
+      g: 132,
+      b: 199,
       decay: Math.random() * 0.007 + 0.004 // Lingers ~2.5s creating an unbroken glowing ribbon
     });
   }
@@ -120,9 +120,9 @@ export function initCursor() {
           alpha: Math.random() * 0.4 + 0.6,
           twinkle: Math.random() * Math.PI * 2,
           twinkleSpeed: Math.random() * 0.1 + 0.04,
-          r: 255,
-          g: 255,
-          b: 255,
+          r: 2,
+          g: 132,
+          b: 199,
           decay: Math.random() * 0.022 + 0.016
         });
       }
@@ -143,9 +143,9 @@ export function initCursor() {
         alpha: 1,
         twinkle: Math.random() * Math.PI * 2,
         twinkleSpeed: Math.random() * 0.15 + 0.05,
-        r: 255,
-        g: 255,
-        b: 255,
+        r: 79,
+        g: 70,
+        b: 229,
         decay: Math.random() * 0.03 + 0.02
       });
     }
