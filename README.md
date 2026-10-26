@@ -4,6 +4,7 @@
 
 [![Live Site](https://img.shields.io/badge/Live%20Site-GitHub%20Pages-38bdf8?style=flat-square&logo=github)](https://maitreerawat.github.io/portfolio/)
 [![GitHub](https://img.shields.io/badge/GitHub-maitreerawat-10b981?style=flat-square&logo=github)](https://github.com/maitreerawat)
+[![Analytics Report](https://img.shields.io/badge/Google%20Analytics-Dashboard-f59e0b?style=flat-square&logo=googleanalytics)](https://analytics.google.com/analytics/web/#/a413445291p560776677/reports/intelligenthome)
 
 ---
 
@@ -43,9 +44,10 @@ My purpose is to bridge **Psychology and Artificial Intelligence with radical em
 
 ---
 
-## 🌐 Live Website
+## 🌐 Live Website & Analytics
 
-Visit the live site at: **[https://maitreerawat.github.io/portfolio/](https://maitreerawat.github.io/portfolio/)**
+* **Live Portfolio:** **[https://maitreerawat.github.io/portfolio/](https://maitreerawat.github.io/portfolio/)**
+* **Google Analytics Report (Private Dashboard):** **[Open GA4 Reports Dashboard ↗](https://analytics.google.com/analytics/web/#/a413445291p560776677/reports/intelligenthome)**
 
 ---
 
