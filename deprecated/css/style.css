@@ -1,0 +1,132 @@
+/* ==========================================================================
+   PORTFOLIO STYLES: COSMIC STORYBOOK & HARDWARE-ACCELERATED ANIMATIONS
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  cursor: none; /* Custom star cursor handles all pointers */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #050a18;
+  background-image: 
+    radial-gradient(at 20% 15%, rgba(20, 55, 110, 0.45) 0px, transparent 60%),
+    radial-gradient(at 80% 85%, rgba(15, 45, 95, 0.4) 0px, transparent 60%),
+    linear-gradient(180deg, #060c1d 0%, #030611 100%);
+  background-attachment: fixed;
+  color: #f1f5f9;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   Hardware Acceleration & GPU Compositing
+   -------------------------------------------------------------------------- */
+.gpu-layer {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* --------------------------------------------------------------------------
+   Star Cursor & Particle Canvas
+   -------------------------------------------------------------------------- */
+#cursor-star {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+}
+
+@keyframes slowDotBlink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 16px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5), 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.blinking-dot {
+  animation: slowDotBlink 3.2s infinite ease-in-out;
+}
+
+#stardust-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* --------------------------------------------------------------------------
+   Falling Cursive Typography
+   -------------------------------------------------------------------------- */
+.falling-line {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  transform: translate3d(0, -35px, 0);
+  filter: blur(8px);
+}
+
+.falling-line:first-child {
+  opacity: 0.55;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0px);
+}
+
+/* --------------------------------------------------------------------------
+   Living Tree of Consciousness Glow & Leaf Animations
+   -------------------------------------------------------------------------- */
+@keyframes treeBreathingGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.45)) drop-shadow(0 0 30px rgba(251, 113, 133, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(251, 113, 133, 0.65)) drop-shadow(0 0 50px rgba(52, 211, 153, 0.35));
+  }
+}
+
+.tree-glow {
+  animation: treeBreathingGlow 6s infinite alternate ease-in-out;
+}
+
+@keyframes leafPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.leaf-node {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  transform-origin: center;
+}
+
+.leaf-node:hover {
+  animation: leafPulse 2.2s infinite ease-in-out;
+  filter: brightness(1.35) drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+}
+
+/* --------------------------------------------------------------------------
+   Custom Scrollbar Hidden for Pure Aesthetic Immersion
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  display: none;
+}
+

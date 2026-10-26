@@ -34,17 +34,15 @@
 ---
 
 ## 3. Current Implementation Status
-* **Cosmic Storybook Journey (Acts I - III):**
-  * **Chapter I (Stardust Void):** Minimalist deep space starfield; unquoted falling cursive verses where the first line is always visible on arrival; sequential emergence of subsequent verses; 2s pause upon completion; top-to-down dissolution.
-  * **Catmull-Rom Spline Fairy Dust Flight:** Autonomous 11-point Catmull-Rom curve with full 360° overhead rope loop knot; continuous path-interpolated fairy dust ribbon trail; 120 FPS native rAF synchronization; camera glide into Chapter II.
-  * **Chapter II (Synapses):** Interactive bioluminescent neural network firing action potentials on cursor hover.
-  * **Chapter III (Tree of Consciousness):** Living botanical SVG tree with 9 interactive emotional leaves (*Wonder, Empathy, Grief, Joy, Vulnerability, Longing, Hope, Connection, Courage*).
-  * **Cursor Engine:** Minimalist glowing white firefly dot blinking slowly (`3.2s` breathing pulse) trailed by fine white fairy dust sparkles.
-* **Act IV (Earth & Living Lab):**
-  * Human Observer Manifesto and core pillars (*Behavioral Psychology, Radical Empathy, AI for Human Progress*).
-  * Interactive Idea Seed Generator cycling through speculative human-AI inquiries.
-  * Direct contact and GitHub links.
-* **`README.md`**: Guide for publishing to GitHub and turning on GitHub Pages.
+* **Act I — Interactive 3D Human Mind & Somatic Emotion Atlas (`#brain-experience`):**
+  * **3D MRI Connectome (`js/scenes/brain3d.js`, `js/data/brainCurves.js`):** Real-time Three.js WebGL & GLSL 3D Simplex Noise cortical scan with 3,600 neural pathways, UnrealBloom bioluminescence, 360° user-controlled orbit (`enableZoom: false` for seamless page scrolling), interactive 3D stereotactic region hover/click detection, and a passive 3D `X·Y·Z` orientation compass (`#brain-compass-canvas`).
+  * **Microscopic Neuron Morphology Study (`NeuronMorphologyStudy` in `js/app.js`):** Interactive Santiago Ramón y Cajal-inspired microscopic neuron study rendering the real anatomical cell shape of each emotion's brain region (*Spindle neuron*, *Pyramidal neuron*, *Starburst Medium Spiny neuron*, *Amygdala-Prefrontal dyad*, *Hippocampal mossy-fiber neuron*, *Cerebellar Purkinje coral-fan neuron*, *Vagal willow pacemaker neuron*) with live hover part explanations (`Soma`, `Dendrites`, `Axon`, `Spines/Boutons`).
+  * **Embodied Somatic Emotion Readouts (`js/data/emotions.js`):** Plain-English explanations of what happens in your brain and how signals travel to your eyes, pupils, lips, voice, breath, and hands when you feel *Empathy*, *Wonder*, *Joy*, *Vulnerability*, *Memory & Longing*, *Imagination & Intuition*, and *Grief & Healing*.
+* **Act II — About Me, Selected Work & Experience (`#earth-section`):**
+  * **Luminous Frosted-Glass Story Cards:** 3 equal-length story cards with animated SVG micro-sketches covering *Microexpressions & Neuroscience*, *AI-Driven Hyper-Growth Learning*, and *Empathy in Action & 11+ Countries*.
+  * **Selected Work Bento Grid:** Features the *3D Human Mind & Somatic Emotion Atlas*, *Stealth AI Crisis & Abuse Protection App (Google Vibe Coding Hackathon Winner)*, *Google: BigQuery Execution Graph & partners.cloud.google.com*, *WE-BAND (Women Techmakers Fellowship)*, *Smart Traffic Management System (IEEE Best Research Intern Award)*, and *AI Hyper-Growth Learning & Neural Cognitive Mirrors*.
+* **Deprecated Archive (`deprecated/`):**
+  * Preserves the earlier Cosmic Storybook (`stardust.js`, `synapses.js`, `tree.js`, `scroller.js`, and v1 `index.html`).
 
 ---
 

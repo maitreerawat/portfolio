@@ -169,31 +169,31 @@ export function initCursor() {
 
     cursorStar.style.transform = `translate3d(${starX - 8}px, ${starY - 8}px, 0)`;
 
-    // Render Stardust particles
-    ctx.clearRect(0, 0, width, height);
+    // Render Stardust particles without expensive CPU shadowBlur
+    if (particles.length > 0) {
+      ctx.clearRect(0, 0, width, height);
 
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -= p.decay;
-      if (p.twinkle !== undefined) p.twinkle += p.twinkleSpeed;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        if (p.twinkle !== undefined) p.twinkle += p.twinkleSpeed;
 
-      if (p.alpha <= 0) {
-        particles.splice(i, 1);
-        continue;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        const displayAlpha = p.twinkle !== undefined
+          ? Math.max(0.1, p.alpha * (0.8 + 0.2 * Math.sin(p.twinkle)))
+          : p.alpha;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.r}, ${p.g}, ${p.b}, ${displayAlpha})`;
+        ctx.fill();
       }
-
-      const displayAlpha = p.twinkle !== undefined 
-        ? Math.max(0.1, p.alpha * (0.8 + 0.2 * Math.sin(p.twinkle))) 
-        : p.alpha;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.r}, ${p.g}, ${p.b}, ${displayAlpha})`;
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = `rgba(255, 255, 255, ${displayAlpha * 0.85})`;
-      ctx.fill();
     }
 
     requestAnimationFrame(render);
