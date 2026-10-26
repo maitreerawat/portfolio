@@ -873,13 +873,12 @@ function initInquiryGenerator() {
   if (!sparkBtn || !titleEl) return;
 
   const inquiries = [
-    'How can AI decode subtle behavioral rhythms to prevent burnout and restore human connection?',
-    'Can intelligent agents be crafted with emotional warmth to support mental well-being in underserved communities?',
-    'What if AI tools helped us recognize our own cognitive biases and listen to others with greater compassion?',
-    'How do we design algorithms that protect human vulnerability rather than exploiting psychological triggers?',
-    'Can we use behavioral psychology and machine learning to build compassionate tools for collective healing?',
-    'Can AI adapt dynamically to individual neurodiversity, reducing sensory anxiety in overwhelming environments?',
-    'What happens to human empathy when machines learn to express unconditional positive regard?'
+    'How can AI adapt to the way each individual brain learns so anyone — even someone who struggled in traditional classrooms — can experience hyper-growth learning?',
+    'Can we read tiny human microexpressions — a shift in the eyes, voice, or breath — to build AI that truly understands what someone is feeling inside?',
+    'How can stealth AI interfaces and disguised safety tools quietly protect people in abusive situations and connect them with help without putting them at risk?',
+    'What happens when a person can talk with an empathetic AI simulation of their future self to build courage, clarity, and emotional resilience?',
+    'How can wearable sensors and machine learning detect silent signs of depression, anxiety, and stress on the body before a person reaches a crisis?',
+    'How do we visualize complex, invisible architectures — whether distributed cloud systems or 86 billion neurons — so humans can intuitively understand them?'
   ];
 
   let currentIdx = 0;
