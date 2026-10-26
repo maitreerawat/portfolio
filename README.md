@@ -1,4 +1,4 @@
-# Maitree Rawat — Portfolio & Research Lab
+# Maitree Rawat · Portfolio & Research Lab
 
 > *"Understanding human patterns. Creating empathetic AI to progress humanity."*
 
@@ -10,7 +10,7 @@
 
 ## 🌟 The Mission
 
-I am driven by a deep curiosity to **understand human beings** — our behavioral patterns, emotional landscapes, cognitive truths, and lived vulnerabilities.
+I am driven by a deep curiosity to **understand human beings**, including our behavioral patterns, emotional landscapes, cognitive truths, and lived vulnerabilities.
 
 My purpose is to bridge **Psychology and Artificial Intelligence with radical empathy**, designing thoughtful solutions and assistive systems that solve real problems, heal fractures, and progress humanity forward.
 

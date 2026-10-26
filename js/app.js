@@ -933,12 +933,12 @@ function initInquiryGenerator() {
   if (!sparkBtn || !titleEl) return;
 
   const inquiries = [
-    'How can AI adapt to the way each individual brain learns so anyone — even someone who struggled in traditional classrooms — can experience hyper-growth learning?',
-    'Can we read tiny human microexpressions — a shift in the eyes, voice, or breath — to build AI that truly understands what someone is feeling inside?',
+    'How can AI adapt to the way each individual brain learns so anyone, even someone who struggled in traditional classrooms, can experience hyper-growth learning?',
+    'Can we read tiny human microexpressions, such as a shift in the eyes, voice, or breath, to build AI that truly understands what someone is feeling inside?',
     'How can stealth AI interfaces and disguised safety tools quietly protect people in abusive situations and connect them with help without putting them at risk?',
     'What happens when a person can talk with an empathetic AI simulation of their future self to build courage, clarity, and emotional resilience?',
     'How can wearable sensors and machine learning detect silent signs of depression, anxiety, and stress on the body before a person reaches a crisis?',
-    'How do we visualize complex, invisible architectures — whether distributed cloud systems or 86 billion neurons — so humans can intuitively understand them?'
+    'How do we visualize complex, invisible architectures, whether distributed cloud systems or 86 billion neurons, so humans can intuitively understand them?'
   ];
 
   let currentIdx = 0;
