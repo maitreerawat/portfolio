@@ -158,6 +158,12 @@ function updateBottomTilesUI(emo) {
   };
 
   if (lastEmotionId && lastEmotionId !== emo.id && readoutEl) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'select_emotion', {
+        emotion_id: emo.id,
+        emotion_name: emo.name
+      });
+    }
     readoutEl.style.opacity = '0';
     setTimeout(() => {
       applyCopy();
@@ -905,6 +911,11 @@ function initInquiryGenerator() {
   let currentIdx = 0;
 
   sparkBtn.addEventListener('click', () => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'generate_research_question', {
+        question_index: (currentIdx + 1) % inquiries.length
+      });
+    }
     if (window.gsap) {
       gsap.to(titleEl, {
         opacity: 0,
