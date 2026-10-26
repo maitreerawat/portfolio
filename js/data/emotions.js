@@ -15,8 +15,12 @@ export const EMOTIONS = [
       'The human mind is an ocean of eighty-six billion brain cells constantly talking to one another. Every memory you keep, every sudden hunch, and every emotion you feel begins as tiny electrical signals traveling from cell to cell.',
     bodySomatic:
       'On the right, you are looking at a live 3D electrical-signals view of the human mind, traced from a real MRI scan. You can drag anywhere on the brain to rotate it 360° and hover over the pathways to gently bring nearby brain cells into focus.',
+    bodySomaticMobile:
+      'Above, you are looking at a live 3D electrical-signals view of the human mind, traced from a real MRI scan. You can drag anywhere on the brain to rotate it 360° and tap any glowing region to explore it.',
     bodySecondary:
       'Along the bottom are core human emotions: Empathy, Wonder, Joy, Vulnerability, Memory, Imagination, and Grief. Select any emotion below to light up its pathway, see the unique microscopic brain cell inside that region, and read how that feeling shows up in your eyes, lips, breath, and hands.',
+    bodySecondaryMobile:
+      'In the bar above are core human emotions: Empathy, Wonder, Joy, Vulnerability, Memory, Imagination, and Grief. Tap any emotion above to light up its pathway, see the unique microscopic brain cell inside that region, and read how that feeling shows up in your eyes, lips, breath, and hands.',
     color: '#0284c7',
     secondaryColor: '#4f46e5',
     hex: 0x0284c7,

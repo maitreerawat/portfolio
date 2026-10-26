@@ -74,6 +74,17 @@ function initBrainSandbox() {
   brainCompass = new BrainAxisCompass('brain-compass-canvas', 'brain-view-readout', brainEngine);
 
   updateBottomTilesUI(brainEngine.currentEmotion);
+
+  window.addEventListener('resize', () => {
+    if (brainEngine && brainEngine.currentEmotion && brainEngine.currentEmotion.id === 'resting') {
+      const isMobile = window.innerWidth < 1024;
+      const somaticEl = document.getElementById('readout-body-somatic');
+      const secondaryEl = document.getElementById('readout-body-secondary');
+      const emo = brainEngine.currentEmotion;
+      if (somaticEl) somaticEl.textContent = isMobile && emo.bodySomaticMobile ? emo.bodySomaticMobile : emo.bodySomatic;
+      if (secondaryEl) secondaryEl.textContent = isMobile && emo.bodySecondaryMobile ? emo.bodySecondaryMobile : emo.bodySecondary;
+    }
+  });
 }
 
 function updateHoveredTileUI(hoveredEmo, activeEmo) {
@@ -139,9 +150,10 @@ function updateBottomTilesUI(emo) {
       regionEl.textContent = emo.regionName;
       regionEl.style.color = `rgba(${c1.r}, ${c1.g}, ${c1.b}, 0.82)`;
     }
+    const isMobile = window.innerWidth < 1024;
     if (primaryEl) primaryEl.textContent = emo.bodyPrimary;
-    if (somaticEl) somaticEl.textContent = emo.bodySomatic;
-    if (secondaryEl) secondaryEl.textContent = emo.bodySecondary;
+    if (somaticEl) somaticEl.textContent = isMobile && emo.bodySomaticMobile ? emo.bodySomaticMobile : emo.bodySomatic;
+    if (secondaryEl) secondaryEl.textContent = isMobile && emo.bodySecondaryMobile ? emo.bodySecondaryMobile : emo.bodySecondary;
 
     const ambientWashEl = document.getElementById('brain-ambient-wash');
     if (ambientWashEl) {
