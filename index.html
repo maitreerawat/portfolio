@@ -57,12 +57,12 @@
   <!-- ========================================================================= -->
   <!-- ACT I: SPLIT LAYOUT — EDITORIAL READOUT (LEFT) & 3D MRI BRAIN (RIGHT)     -->
   <!-- ========================================================================= -->
-  <section id="brain-experience" class="relative w-screen h-screen overflow-hidden bg-transparent flex flex-col lg:flex-row">
+  <section id="brain-experience" class="relative w-screen min-h-screen lg:h-screen lg:overflow-hidden bg-transparent flex flex-col lg:flex-row">
     <!-- Subtle Emotion-Reactive Ambient Pastel Wash -->
     <div id="brain-ambient-wash" class="pointer-events-none absolute inset-0 transition-all duration-700 opacity-80"></div>
 
     <!-- Whisper-Quiet Top Bar -->
-    <header class="absolute top-0 left-0 right-0 z-20 px-8 sm:px-12 py-7 flex items-center justify-between pointer-events-none">
+    <header class="relative lg:absolute top-0 left-0 right-0 z-20 px-6 sm:px-12 pt-6 pb-2 lg:py-7 flex items-center justify-between pointer-events-none shrink-0">
       <div class="text-[11px] font-mono tracking-[0.22em] uppercase text-slate-800 font-semibold pointer-events-auto">
         Maitree Rawat
       </div>
@@ -72,23 +72,23 @@
       </button>
     </header>
 
-    <!-- Left Column: Top-Anchored Editorial Prose & Neuron Study (Zero Layout Shift) -->
-    <div class="w-full lg:w-[43%] h-auto lg:h-full flex flex-col justify-start px-8 sm:px-14 pt-20 sm:pt-22 pb-24 lg:pb-16 z-10 shrink-0">
+    <!-- Left Column: Top-Anchored Editorial Prose & Neuron Study (Mobile: Order 3 below swipe bar; Desktop: Order 1 Left) -->
+    <div class="order-3 lg:order-1 w-full lg:w-[43%] h-auto lg:h-full flex flex-col justify-start px-6 sm:px-14 pt-6 sm:pt-8 lg:pt-24 pb-14 lg:pb-16 z-10 shrink-0">
       <div id="editorial-readout" class="max-w-lg transition-opacity duration-200 ease-out">
         <h2 id="readout-heading" class="font-serif text-3xl sm:text-4xl font-normal text-slate-900 leading-tight tracking-tight">
           The Human Mind
         </h2>
-        <p id="readout-region-name" class="font-mono text-[11px] uppercase tracking-[0.15em] text-sky-700 font-semibold mt-1.5 truncate transition-colors duration-500">
+        <p id="readout-region-name" class="font-mono text-[11px] uppercase tracking-[0.14em] text-sky-700 font-semibold mt-1.5 leading-relaxed transition-colors duration-500">
           Whole-Brain Resting Network · Front to Back
         </p>
 
         <!-- Interactive Microscopic Neuron Morphology Study (Shown for specific emotions) -->
-        <div id="neuron-study-block" class="my-3 hidden rounded-2xl px-4 py-2.5 transition-all duration-500">
+        <div id="neuron-study-block" class="my-3 hidden rounded-2xl px-4 py-3 transition-all duration-500">
           <canvas id="neuron-morphology-canvas" class="w-full max-w-[360px] h-[96px] block pointer-events-auto"></canvas>
-          <div class="h-[4.1rem] mt-1 overflow-hidden">
-            <p id="readout-neuron-type" class="font-serif italic text-[16.5px] font-medium text-slate-700 truncate transition-colors duration-300">
+          <div class="mt-1.5">
+            <p id="readout-neuron-type" class="font-serif italic text-[16.5px] font-medium text-slate-700 leading-snug transition-colors duration-300">
             </p>
-            <p id="readout-neuron-desc" class="text-[12.2px] text-slate-500 leading-snug mt-0.5 line-clamp-2 transition-colors duration-300">
+            <p id="readout-neuron-desc" class="text-[12.2px] text-slate-500 leading-relaxed mt-1 transition-colors duration-300">
             </p>
           </div>
         </div>
@@ -107,12 +107,12 @@
       </div>
     </div>
 
-    <!-- Right Column: Three.js WebGL 3D MRI Brain & 3D X-Y-Z Orientation Compass -->
-    <div class="relative flex-1 h-full min-h-[50vh]">
+    <!-- Right Column: Three.js WebGL 3D MRI Brain & 3D X-Y-Z Orientation Compass (Mobile: Order 1 Top Hero; Desktop: Order 2 Right) -->
+    <div class="order-1 lg:order-2 relative w-full h-[40vh] min-h-[260px] sm:h-[45vh] lg:flex-1 lg:h-full lg:min-h-[50vh] shrink-0">
       <div id="brain-canvas-container"></div>
 
       <!-- Passive 3D X/Y/Z Axis Compass & View Readout in Corner -->
-      <div class="absolute bottom-24 right-6 sm:right-9 z-20 flex flex-col items-center pointer-events-none select-none">
+      <div class="absolute bottom-2 right-3 sm:right-8 lg:bottom-24 lg:right-9 z-20 flex flex-col items-center pointer-events-none select-none scale-75 sm:scale-90 lg:scale-100 origin-bottom-right">
         <canvas id="brain-compass-canvas" class="w-[108px] h-[108px] block pointer-events-none"></canvas>
         <div id="brain-view-readout" class="text-[10.5px] font-mono tracking-wider text-slate-600 mt-0.5 text-center">
           Viewing: Front · Right
@@ -120,9 +120,9 @@
       </div>
     </div>
 
-    <!-- Single Subtle Bottom Bar for Emotions -->
-    <div class="absolute bottom-7 left-0 right-0 z-20 flex flex-col items-center px-6 pointer-events-none">
-      <nav id="emotion-bottom-bar" class="pointer-events-auto bottom-bar-glass px-2.5 py-1.5 rounded-full flex flex-wrap items-center justify-center gap-1">
+    <!-- Single Subtle Bar for Emotions (Mobile: Order 2 Swipeable Horizontal Strip; Desktop: Order 3 Pinned Bottom Bar) -->
+    <div class="order-2 lg:order-3 relative w-full lg:absolute lg:bottom-7 lg:left-0 lg:right-0 z-20 flex flex-col items-center px-4 sm:px-6 py-1.5 lg:py-0 pointer-events-none">
+      <nav id="emotion-bottom-bar" class="pointer-events-auto bottom-bar-glass max-w-full overflow-x-auto lg:overflow-visible px-2.5 py-1.5 rounded-full flex flex-nowrap lg:flex-wrap items-center justify-start sm:justify-center gap-1">
       </nav>
     </div>
 
@@ -131,7 +131,7 @@
   <!-- ========================================================================= -->
   <!-- ACT II: MAITREE'S PORTFOLIO, RESEARCH & ENGINEERING                       -->
   <!-- ========================================================================= -->
-  <main id="earth-section" class="relative w-full bg-transparent text-slate-900 py-28 px-6 sm:px-12 z-20 overflow-hidden">
+  <main id="earth-section" class="relative w-full bg-transparent text-slate-900 py-14 sm:py-24 lg:py-28 px-5 sm:px-12 z-20 overflow-hidden">
 
     <!-- Subtle Ambient Pastel Spotlights -->
     <div class="pointer-events-none absolute -top-40 left-1/4 w-[34rem] h-[34rem] rounded-full bg-sky-400/[0.12] blur-[130px]"></div>

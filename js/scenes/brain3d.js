@@ -430,7 +430,7 @@ export class Brain3DEngine {
     // 5. Root Brain Group (Compact scale centered cleanly in right column)
     this.brainGroup = new THREE.Group();
     this.brainGroup.position.set(0, 0.02, 0);
-    this.brainGroup.scale.setScalar(0.68);
+    this.brainGroup.scale.setScalar(width < 768 ? 0.78 : 0.68);
     this.brainGroup.rotation.y = this.targetBrainRotY;
     this.scene.add(this.brainGroup);
 
@@ -745,6 +745,8 @@ export class Brain3DEngine {
     const emo = EMOTIONS.find((e) => e.id === emotionId) || EMOTIONS[0];
     this.currentEmotion = emo;
     this.firingSpeedMultiplier = emo.firingSpeed;
+    this.hoveredEmotion = null;
+    this.targetHoverStrength = 0.0;
 
     const targetColor = new THREE.Color(emo.color);
     const secondaryColor = new THREE.Color(emo.secondaryColor);
@@ -809,10 +811,65 @@ export class Brain3DEngine {
     }
   }
 
+  detectEmotionAtClientXY(clientX, clientY) {
+    if (!this.renderer || !this.container) return null;
+    const rect = this.container.getBoundingClientRect();
+    const relX = clientX - rect.left;
+    const relY = clientY - rect.top;
+    this.pointerNDC.x = (relX / (rect.width || 1)) * 2 - 1;
+    this.pointerNDC.y = -(relY / (rect.height || 1)) * 2 + 1;
+
+    const insideCanvas =
+      this.pointerNDC.x >= -1.0 &&
+      this.pointerNDC.x <= 1.0 &&
+      this.pointerNDC.y >= -1.0 &&
+      this.pointerNDC.y <= 1.0;
+
+    if (!insideCanvas) {
+      this.targetMouse3D.set(99, 99, 99);
+      return null;
+    }
+
+    this.interactionPlane.normal.copy(this.camera.position).normalize();
+    this.raycaster.setFromCamera(this.pointerNDC, this.camera);
+    if (this.raycaster.ray.intersectPlane(this.interactionPlane, this.tempVec)) {
+      this.brainGroup.worldToLocal(this.tempVec);
+      this.targetMouse3D.copy(this.tempVec);
+    }
+
+    let bestEmotion = null;
+    let bestScore = -999;
+
+    if (this.raycaster.ray.distanceToPoint(this.brainGroup.position) < 1.55) {
+      for (let i = 1; i < EMOTIONS.length; i++) {
+        const emo = EMOTIONS[i];
+        const loci = emo.loci;
+        for (let j = 0; j < loci.length; j++) {
+          const loc = loci[j];
+          this.tempLocusWorld.set(loc.x, loc.y, loc.z).applyMatrix4(this.brainGroup.matrixWorld);
+          const perpDist = this.raycaster.ray.distanceToPoint(this.tempLocusWorld);
+          const hitRadius = (loc.radius || 0.55) * 0.85;
+          if (perpDist < hitRadius) {
+            const camDist = this.camera.position.distanceTo(this.tempLocusWorld);
+            const closeness = 1.0 - perpDist / hitRadius;
+            const score = closeness * 1.5 - camDist * 0.28;
+            if (score > bestScore) {
+              bestScore = score;
+              bestEmotion = emo;
+            }
+          }
+        }
+      }
+    }
+
+    return bestEmotion;
+  }
+
   onPointerDown(e) {
     this.isPointerDown = true;
     this.targetCamPos = null;
     this.pointerDownPos.set(e.clientX, e.clientY);
+    this.pointerDownEmotion = this.detectEmotionAtClientXY(e.clientX, e.clientY);
   }
 
   setCanonicalView(viewId) {
@@ -866,10 +923,18 @@ export class Brain3DEngine {
     const dy = e.clientY - this.pointerDownPos.y;
     const moveDistSq = dx * dx + dy * dy;
 
-    // If user clicked (not dragged to orbit) while hovering a brain region, select that emotion
-    if (moveDistSq < 36 && this.hoveredEmotion) {
-      this.selectEmotion(this.hoveredEmotion.id, true, false);
+    // If user clicked or tapped (not dragged to orbit) on a brain region, select that emotion and stick it
+    if (moveDistSq < 64) {
+      const tappedEmo =
+        this.pointerDownEmotion ||
+        this.detectEmotionAtClientXY(e.clientX, e.clientY) ||
+        this.hoveredEmotion;
+      if (tappedEmo) {
+        this.setHoveredEmotionPreview(null);
+        this.selectEmotion(tappedEmo.id, true, false);
+      }
     }
+    this.pointerDownEmotion = null;
   }
 
   setHoveredEmotionPreview(emo) {
@@ -895,58 +960,8 @@ export class Brain3DEngine {
   }
 
   onPointerMove(e) {
-    if (!this.renderer) return;
-    const relX = e.pageX - this.containerLeft;
-    const relY = e.pageY - this.containerTop;
-    this.pointerNDC.x = (relX / this.containerWidth) * 2 - 1;
-    this.pointerNDC.y = -(relY / this.containerHeight) * 2 + 1;
-
-    const insideCanvas =
-      this.pointerNDC.x >= -1.0 &&
-      this.pointerNDC.x <= 1.0 &&
-      this.pointerNDC.y >= -1.0 &&
-      this.pointerNDC.y <= 1.0;
-
-    if (!insideCanvas) {
-      this.targetMouse3D.set(99, 99, 99);
-      return;
-    }
-
-    this.interactionPlane.normal.copy(this.camera.position).normalize();
-    this.raycaster.setFromCamera(this.pointerNDC, this.camera);
-    if (this.raycaster.ray.intersectPlane(this.interactionPlane, this.tempVec)) {
-      this.brainGroup.worldToLocal(this.tempVec);
-      this.targetMouse3D.copy(this.tempVec);
-    }
-
-    // Fast O(1) 3D Stereotactic Region Hover Detection with slight focus on cells
-    if (this.isPointerDown) return;
-
-    let bestEmotion = null;
-    let bestScore = -999;
-
-    if (this.raycaster.ray.distanceToPoint(this.brainGroup.position) < 1.45) {
-      for (let i = 1; i < EMOTIONS.length; i++) {
-        const emo = EMOTIONS[i];
-        const loci = emo.loci;
-        for (let j = 0; j < loci.length; j++) {
-          const loc = loci[j];
-          this.tempLocusWorld.set(loc.x, loc.y, loc.z).applyMatrix4(this.brainGroup.matrixWorld);
-          const perpDist = this.raycaster.ray.distanceToPoint(this.tempLocusWorld);
-          const hitRadius = (loc.radius || 0.55) * 0.82;
-          if (perpDist < hitRadius) {
-            const camDist = this.camera.position.distanceTo(this.tempLocusWorld);
-            const closeness = 1.0 - perpDist / hitRadius;
-            const score = closeness * 1.5 - camDist * 0.28;
-            if (score > bestScore) {
-              bestScore = score;
-              bestEmotion = emo;
-            }
-          }
-        }
-      }
-    }
-
+    if (!this.renderer || this.isPointerDown || e.pointerType === 'touch') return;
+    const bestEmotion = this.detectEmotionAtClientXY(e.clientX, e.clientY);
     this.setHoveredEmotionPreview(bestEmotion);
   }
 
@@ -962,6 +977,9 @@ export class Brain3DEngine {
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
+    if (this.brainGroup) {
+      this.brainGroup.scale.setScalar(width < 768 ? 0.78 : 0.68);
+    }
     this.renderer.setSize(width, height);
     this.composer.setSize(width, height);
     this.bloomPass.resolution.set(Math.floor(width * 0.5), Math.floor(height * 0.5));

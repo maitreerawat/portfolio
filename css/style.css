@@ -100,6 +100,19 @@ html, body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(15, 23, 42, 0.1);
   box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto;
+  }
+  #cursor-star,
+  #stardust-canvas {
+    display: none !important;
+  }
 }
 
 ::-webkit-scrollbar {

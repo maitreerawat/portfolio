@@ -32,7 +32,7 @@ function initBrainSandbox() {
       btn.type = 'button';
       btn.dataset.emotionId = emo.id;
       btn.className =
-        'emotion-pill px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all duration-300 flex items-center space-x-2 text-slate-900 border border-transparent';
+        'emotion-pill shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all duration-300 flex items-center space-x-2 text-slate-900 border border-transparent';
 
       btn.innerHTML = `
         <span class="w-1.5 h-1.5 rounded-full shrink-0 transition-transform duration-300"
@@ -41,13 +41,13 @@ function initBrainSandbox() {
       `;
 
       btn.addEventListener('mouseenter', () => {
-        if (brainEngine) {
+        if (brainEngine && window.matchMedia('(hover: hover)').matches) {
           brainEngine.setHoveredEmotionPreview(emo);
         }
       });
 
       btn.addEventListener('mouseleave', () => {
-        if (brainEngine) {
+        if (brainEngine && window.matchMedia('(hover: hover)').matches) {
           brainEngine.setHoveredEmotionPreview(null);
         }
       });
@@ -102,6 +102,7 @@ function updateHoveredTileUI(hoveredEmo, activeEmo) {
 let lastEmotionId = null;
 
 function updateBottomTilesUI(emo) {
+  const emotionBarEl = document.getElementById('emotion-bottom-bar');
   const pills = document.querySelectorAll('.emotion-pill');
   pills.forEach((pill) => {
     const isActive = pill.dataset.emotionId === emo.id;
@@ -109,6 +110,10 @@ function updateBottomTilesUI(emo) {
       pill.style.color = '#0f172a';
       pill.style.borderColor = 'rgba(15, 23, 42, 0.22)';
       pill.style.backgroundColor = 'rgba(15, 23, 42, 0.08)';
+      if (emotionBarEl && window.innerWidth < 1024) {
+        const targetScrollLeft = pill.offsetLeft - emotionBarEl.clientWidth / 2 + pill.clientWidth / 2;
+        emotionBarEl.scrollTo({ left: Math.max(0, targetScrollLeft), behavior: 'smooth' });
+      }
     } else {
       pill.style.color = '#334155';
       pill.style.borderColor = 'transparent';
@@ -209,6 +214,7 @@ class NeuronMorphologyStudy {
 
     this.pointer = { x: -999, y: -999, active: false };
     this.hoveredPart = null;
+    this.selectedPart = null;
     this.transitionAlpha = 1.0;
 
     this.resize();
@@ -219,8 +225,9 @@ class NeuronMorphologyStudy {
       this.buildMorphology(this.emotionId);
     });
 
+    this.canvas.addEventListener('pointerdown', (e) => this.onPointerDown(e));
     this.canvas.addEventListener('pointermove', (e) => this.onPointerMove(e));
-    this.canvas.addEventListener('pointerleave', () => this.onPointerLeave());
+    this.canvas.addEventListener('pointerleave', (e) => this.onPointerLeave(e));
 
     this.startTime = performance.now();
     this.animate();
@@ -251,6 +258,7 @@ class NeuronMorphologyStudy {
     this.targetRgb = this.hexToRgb(emo.color);
     this.speedMult = emo.firingSpeed || 1.0;
     this.hoveredPart = null;
+    this.selectedPart = null;
     this.transitionAlpha = 0.15;
     this.buildMorphology(emo.id);
     this.updateLabel();
@@ -259,12 +267,13 @@ class NeuronMorphologyStudy {
   updateLabel() {
     if (!this.labelEl) return;
     const c = this.targetRgb || { r: 71, g: 85, b: 105 };
-    if (this.hoveredPart) {
-      this.labelEl.textContent = this.hoveredPart.name;
-      this.labelEl.style.color = `rgba(${c.r}, ${c.g}, ${c.b}, 0.88)`;
+    const activePart = this.hoveredPart || this.selectedPart;
+    if (activePart) {
+      this.labelEl.textContent = activePart.name;
+      this.labelEl.style.color = `rgba(${c.r}, ${c.g}, ${c.b}, 0.92)`;
       if (this.descEl) {
-        this.descEl.textContent = this.hoveredPart.desc;
-        this.descEl.style.color = '#475569';
+        this.descEl.textContent = activePart.desc;
+        this.descEl.style.color = '#334155';
       }
     } else {
       this.labelEl.textContent = this.currentEmo.neuronType;
@@ -276,22 +285,15 @@ class NeuronMorphologyStudy {
     }
   }
 
-  onPointerMove(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    this.pointer.x = x;
-    this.pointer.y = y;
-    this.pointer.active = true;
-
+  findPartAt(x, y) {
     let bestPart = null;
-    let minDist = 26;
+    let minDist = 30;
 
     // 1. Check Somas first (Cell Body & Nucleus)
     for (let i = 0; i < this.somas.length; i++) {
       const s = this.somas[i];
       const d = Math.hypot(x - s.x, y - s.y);
-      if (d < Math.max(s.rx, s.ry) + 10) {
+      if (d < Math.max(s.rx, s.ry) + 12) {
         bestPart = {
           type: 'soma',
           name: s.partName || 'Soma (Cell Body & Nucleus)',
@@ -309,7 +311,7 @@ class NeuronMorphologyStudy {
       for (let i = 0; i < this.spines.length; i++) {
         const sp = this.spines[i];
         const d = Math.hypot(x - sp.x, y - sp.y);
-        if (d < 12 && d < minDist) {
+        if (d < 14 && d < minDist) {
           minDist = d;
           bestPart = {
             type: 'spine',
@@ -345,9 +347,38 @@ class NeuronMorphologyStudy {
       }
     }
 
+    return bestPart;
+  }
+
+  onPointerDown(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    this.pointer.x = x;
+    this.pointer.y = y;
+    this.pointer.active = true;
+
+    const hitPart = this.findPartAt(x, y);
+    this.selectedPart = hitPart;
+    this.hoveredPart = hitPart;
+    this.updateLabel();
+  }
+
+  onPointerMove(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    this.pointer.x = x;
+    this.pointer.y = y;
+    this.pointer.active = true;
+
+    const bestPart = this.findPartAt(x, y);
     const prevName = this.hoveredPart ? this.hoveredPart.name : null;
     const nextName = bestPart ? bestPart.name : null;
     this.hoveredPart = bestPart;
+    if (e.pointerType === 'touch' && bestPart) {
+      this.selectedPart = bestPart;
+    }
     if (prevName !== nextName) {
       this.updateLabel();
     }
@@ -627,10 +658,12 @@ class NeuronMorphologyStudy {
     ctx.clearRect(0, 0, this.width, this.height);
     ctx.globalCompositeOperation = 'source-over';
 
+    const activePart = this.hoveredPart || this.selectedPart;
+
     // 1. Draw living, breathing dendritic and axonal branches
     for (let i = 0; i < this.branches.length; i++) {
       const br = this.branches[i];
-      const isPartHovered = this.hoveredPart && this.hoveredPart.name === br.partName;
+      const isPartHovered = activePart && activePart.name === br.partName;
 
       // Multi-harmonic biological breathing wave + interactive cursor ripple
       let swayX = Math.cos(time * 2.1 + br.phase) * 1.4;
@@ -661,7 +694,7 @@ class NeuronMorphologyStudy {
     // 2. Draw synaptic spines / boutons
     for (let i = 0; i < this.spines.length; i++) {
       const sp = this.spines[i];
-      const isSpineHovered = this.hoveredPart && this.hoveredPart.type === 'spine';
+      const isSpineHovered = activePart && activePart.type === 'spine';
       const pulse = 0.5 + 0.5 * Math.sin(time * 3.8 + i * 0.9);
       const rad = (isSpineHovered ? 2.2 : 1.75) * (0.85 + 0.3 * pulse);
 
@@ -675,7 +708,7 @@ class NeuronMorphologyStudy {
     const somaBeat = 1.0 + 0.12 * Math.sin(time * 3.2 * this.speedMult);
     for (let i = 0; i < this.somas.length; i++) {
       const s = this.somas[i];
-      const isSomaHovered = this.hoveredPart && this.hoveredPart.name === s.partName;
+      const isSomaHovered = activePart && activePart.name === s.partName;
       const scale = somaBeat * (isSomaHovered ? 1.12 : 1.0);
 
       // Outer bioluminescent soma halo
